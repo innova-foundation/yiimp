@@ -42,7 +42,7 @@ using namespace std;
 
 typedef void (*YAAMP_HASH_FUNCTION)(const char *, char *, uint32_t);
 
-#define YAAMP_SHAREPERSEC		10
+#define YAAMP_SHAREPERSEC		10.0
 
 #define YAAMP_MINDIFF			0x0000000080000000
 #define YAAMP_MAXDIFF			0x4000000000000000

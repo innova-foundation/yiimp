@@ -25,20 +25,21 @@ void client_record_difficulty(YAAMP_CLIENT *client)
     }
 
     const int MIN_SUBMIT_INTERVAL_MS = 500;
-    const int SMOOTHING_FACTOR = 95;
-    const int SUBMISSIONS_PER_MINUTE = 60 * 1000 / MIN_SUBMIT_INTERVAL_MS;
+    const double SMOOTHING_FACTOR = 0.95;
+    const int SUBMISSIONS_PER_MINUTE = 60 * 1000;
 
     int time_since_last_submit = current_timestamp() - client->last_submit_time;
     if (time_since_last_submit < MIN_SUBMIT_INTERVAL_MS) {
         time_since_last_submit = MIN_SUBMIT_INTERVAL_MS;
     }
 
-    int submissions_per_second = SUBMISSIONS_PER_MINUTE / time_since_last_submit;
-    int new_shares_per_minute = (client->shares_per_minute * SMOOTHING_FACTOR
-                                 + 60 * submissions_per_second) / 100;
+    double submissions_per_second = SUBMISSIONS_PER_MINUTE / time_since_last_submit;
+    double new_shares_per_minute = (client->shares_per_minute * SMOOTHING_FACTOR
+                                 + 0.05 * submissions_per_second);
 
     client->shares_per_minute = new_shares_per_minute;
     client->last_submit_time = current_timestamp();
+    debuglog("client->shares_per_minute %f\n", new_shares_per_minute);
 }
 
 
@@ -88,8 +89,14 @@ void client_adjust_difficulty(YAAMP_CLIENT *client)
     else if (client->shares_per_minute > 20) {
         client_change_difficulty(client, client->difficulty_actual * 1.5);
     }
-    else if (client->shares_per_minute < 8) {
+    else if (client->shares_per_minute > 15) {
+        client_change_difficulty(client, client->difficulty_actual * 1.2);
+    }
+    else if (client->shares_per_minute < 4) {
         client_change_difficulty(client, client->difficulty_actual / 2);
+    }
+    else if (client->shares_per_minute < 7) {
+        client_change_difficulty(client, client->difficulty_actual / 1.2);
     }
 
     double new_difficulty = client->difficulty_actual * factor;
@@ -102,11 +109,12 @@ void client_adjust_difficulty(YAAMP_CLIENT *client)
 
 int client_send_difficulty(YAAMP_CLIENT *client, double difficulty)
 {
-    client->shares_per_minute = YAAMP_SHAREPERSEC;
+    if(client->shares_per_minute <  7 || client->shares_per_minute > 15)
+        client->shares_per_minute = YAAMP_SHAREPERSEC;
 
     char buf[64];
     if (difficulty >= 1.0) {
-        snprintf(buf, sizeof(buf), "[%.0f]", difficulty);
+        snprintf(buf, sizeof(buf), "[%.3f]", difficulty);
     } else {
         snprintf(buf, sizeof(buf), "[%0.8f]", difficulty);
     }

@@ -2382,8 +2382,11 @@ void coinbase_create(YAAMP_COIND *coind, YAAMP_JOB_TEMPLATE *templ, json_value *
 	} else {
 		strcat(templ->coinb2, "01");
 	}
-
-	job_pack_tx(coind, templ->coinb2, available, NULL);
+	
+	if(strcmp(coind->symbol, "NOWP") == 0 || strcmp(coind->symbol, "tNOWP") == 0)
+		job_pack_tx(coind, templ->coinb2, available, coind->script_pubkey);
+	else 
+		job_pack_tx(coind, templ->coinb2, available, NULL);
 
 	//if(coind->txmessage)
 	//	strcat(templ->coinb2, "00");
