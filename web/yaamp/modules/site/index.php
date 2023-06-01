@@ -263,7 +263,7 @@ td.symb {
 <td align="center"><a href="https://innova-foundation.com" target="_blank"><img width="16px" src="images/www.png"></a></td>
 <td align="center"><a href="https://discord.gg/mNM59znzNG" target="_blank"><img width="16px" src="images/discordm.png"></a></td>
 <td align="center"><a href="https://chainz.cryptoid.info/inn/" target="_blank"><img width="16px" src="images/explorer.png"></a></td>
-<td align="center"><a href="https://github.com/innova-foundation/innova" target="_blank"><img width="16px" src="images/github.png"></a></td>
+<td align="center"><a href="https://github.com/innova-foundation/innova" target="_blank"><img width="16px" src="images/githubm.png"></a></td>
 <td align="center"><a href="https://www.probit.com/app/exchange/INN-USDT" target="_blank"><img width="16px" src="images/exchange.png"></a></td>
 <td align="center"><a href="https://twitter.com/Innova_Fdn" target="_blank"><img width="16px" src="images/Twitter.png"></a></td>
 <td align="center"><a href="https://github.com/innova-foundation/innova/releases" target="_blank"><img width="16px" src="images/wallet.png"></a></td>
@@ -288,7 +288,7 @@ td.symb {
 <br><br><br><br><br><br><br><br><br><br>
 
 <script>
-	
+
 function page_refresh()
 {
     pool_current_refresh();
