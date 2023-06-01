@@ -288,10 +288,7 @@ td.symb {
 <br><br><br><br><br><br><br><br><br><br>
 
 <script>
-
-<!-- Footer -->
-<div class="footer"><p>&copy; 2023 Innova-Foundation - All Rights Reserved</p></div>
-
+	
 function page_refresh()
 {
     pool_current_refresh();
