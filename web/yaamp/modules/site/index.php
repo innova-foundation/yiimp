@@ -106,7 +106,7 @@ $payout_freq = (YAAMP_PAYMENTS_FREQ / 3600) . " hours";
 			</select>
 		</td>
 		<td>
-			<input id="text-wallet" type="text" size="30" placeholder="RF9D1R3Vt7CECzvb1SawieUC9cYmAY1qoj" style="border-style:solid; padding: 3px; font-family: monospace; border-radius: 5px;" onkeyup="generate()">
+			<input id="text-wallet" type="text" size="30" placeholder="iL9diZHxTQ48qPVCRY6SGQR8KiPixq7zPz" style="border-style:solid; padding: 3px; font-family: monospace; border-radius: 5px;" onkeyup="generate()">
 		</td>
 		<td>
 			<input id="text-rig-name" type="text" size="10" placeholder="001" style="border-style:solid; padding: 3px; font-family: monospace; border-radius: 5px;" onkeyup="generate()">
@@ -201,7 +201,7 @@ endif;
 <div class="main-left-inner">
 
 <ul class="social-icons">
-<!--    <li><a href="http://www.facebook.com"><img src='/images/Facebook.png' /></a></li> -->
+<!-- <li><a href="http://www.facebook.com"><img src='/images/Facebook.png' /></a></li> -->
     <li><a href="http://www.twitter.com/Innova_Fdn"><img src='/images/Twitter.png' /></a></li>
 <!-- <li><a href="http://www.youtube.com"><img src='/images/YouTube.png' /></a></li> -->
     <li><a href="http://www.github.com"><img src='/images/Github.png' /></a></li> 
