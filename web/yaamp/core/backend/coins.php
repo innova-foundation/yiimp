@@ -115,14 +115,13 @@ function BackendCoinsUpdate()
 				$coin->hassubmitblock = true;
 		}
 
-		if($coin->auxpow == NULL)
+		if($coin->auxpow) // credit auxpow fix - barrystyle - thank you!
 		{
 			$ret = $remote->getauxblock();
 
-			if(strcasecmp($remote->error, 'method not found') == 0)
-				$coin->auxpow = false;
-			else
-				$coin->auxpow = true;
+			$coin->auxpow = false;
+			if($ret && isset($ret['hash']))
+					$coin->auxpow = true;
 		}
 
         // Change for segwit
