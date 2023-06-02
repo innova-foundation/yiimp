@@ -95,139 +95,6 @@ YAAMP_JOB_TEMPLATE *coind_create_template_memorypool(YAAMP_COIND *coind)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static int decred_parse_header(YAAMP_JOB_TEMPLATE *templ, const char *header_hex, bool getwork)
-{
-	struct __attribute__((__packed__)) {
-		uint32_t version;
-		char prevblock[32];
-		char merkleroot[32];
-		char stakeroot[32];
-		uint16_t votebits;
-		char finalstate[6];
-		uint16_t voters;
-		uint8_t freshstake;
-		uint8_t revoc;
-		uint32_t poolsize;
-		uint32_t nbits;
-		uint64_t sbits;
-		uint32_t height;
-		uint32_t size;
-		uint32_t ntime;
-		uint32_t nonce;
-		unsigned char extra[32];
-		uint32_t stakever;
-		uint32_t hashtag[3];
-	} header;
-
-	//debuglog("HEADER: %s\n", header_hex);
-
-	binlify((unsigned char*) &header, header_hex);
-
-	templ->height = header.height;
-	// reversed to tell its not a normal stratum coinbase
-	sprintf(templ->version, "%08x", getwork ? bswap32(header.version) : header.version);
-	sprintf(templ->ntime, "%08x", header.ntime);
-	sprintf(templ->nbits, "%08x", header.nbits);
-
-	templ->prevhash_hex[64] = '\0';
-	uint32_t* prev32 = (uint32_t*) header.prevblock;
-	for(int i=0; i < 8; i++)
-		sprintf(&templ->prevhash_hex[i*8], "%08x", getwork ? prev32[7-i] : bswap32(prev32[7-i]));
-	ser_string_be2(templ->prevhash_hex, templ->prevhash_be, 8);
-
-	// store all other stuff
-	memcpy(templ->header, &header, sizeof(header));
-
-	return 0;
-}
-
-// decred getwork over stratum
-static YAAMP_JOB_TEMPLATE *decred_create_worktemplate(YAAMP_COIND *coind)
-{
-	char rpc_error[1024] = { 0 };
-	#define GETWORK_RETRY_MAX 3
-	int retry_cnt = GETWORK_RETRY_MAX;
-retry:
-	json_value *gw = rpc_call(&coind->rpc, "getwork", "[]");
-	if(!gw || json_is_null(gw)) {
-		usleep(500*YAAMP_MS); // too much connections ? no data received
-		if (--retry_cnt > 0) {
-			if (coind->rpc.curl)
-				rpc_curl_get_lasterr(rpc_error, 1023);
-			debuglog("%s getwork retry %d\n", coind->symbol, GETWORK_RETRY_MAX-retry_cnt);
-			goto retry;
-		}
-		debuglog("%s error getwork %s\n", coind->symbol, rpc_error);
-		return NULL;
-	}
-	json_value *gwr = json_get_object(gw, "result");
-	if(!gwr) {
-		debuglog("%s no getwork json result!\n", coind->symbol);
-		return NULL;
-	}
-	else if (json_is_null(gwr)) {
-		json_value *jr = json_get_object(gw, "error");
-		if (!jr || json_is_null(jr)) return NULL;
-		const char *err = json_get_string(jr, "message");
-		if (err && !strcmp(err, "internal error")) {
-			usleep(500*YAAMP_MS); // not enough voters (testnet)
-			if (--retry_cnt > 0) {
-				goto retry;
-			}
-			debuglog("%s getwork failed after %d tries: %s\n",
-				coind->symbol, GETWORK_RETRY_MAX, err);
-		}
-		return NULL;
-	}
-	const char *header_hex = json_get_string(gwr, "data");
-	if (!header_hex || !strlen(header_hex)) {
-		debuglog("%s no getwork data!\n", coind->symbol);
-		return NULL;
-	}
-
-	YAAMP_JOB_TEMPLATE *templ = new YAAMP_JOB_TEMPLATE;
-	memset(templ, 0, sizeof(YAAMP_JOB_TEMPLATE));
-
-	templ->created = time(NULL);
-
-	decred_parse_header(templ, header_hex, true);
-	json_value_free(gw);
-
-	// bypass coinbase and merkle for now... send without nonce/extradata
-	const unsigned char *hdr = (unsigned char *) &templ->header[36];
-	hexlify(templ->coinb1, hdr, 192 - 80);
-	const unsigned char *sfx = (unsigned char *) &templ->header[176];
-	hexlify(templ->coinb2, sfx, 180 - 176); // stake version
-
-	vector<string> txhashes;
-	txhashes.push_back("");
-
-	templ->txmerkles[0] = 0;
-	templ->txcount = txhashes.size();
-	templ->txsteps = merkle_steps(txhashes);
-	txhashes.clear();
-
-	return templ;
-}
-
-// for future decred real stratum
-static void decred_fix_template(YAAMP_COIND *coind, YAAMP_JOB_TEMPLATE *templ, json_value *json)
-{
-	const char *header_hex = json_get_string(json, "header");
-	if (!header_hex || !strlen(header_hex)) {
-		stratumlog("decred error, no block header in json!\n");
-		return;
-	}
-
-	// todo ?
-	//  "mintime": 1455511962,
-	//  "maxtime": 1455522081,
-
-	decred_parse_header(templ, header_hex, false);
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 YAAMP_JOB_TEMPLATE *coind_create_template(YAAMP_COIND *coind)
 {
 	if(coind->usememorypool)
@@ -240,11 +107,8 @@ YAAMP_JOB_TEMPLATE *coind_create_template(YAAMP_COIND *coind)
 	json_value *json = rpc_call(&coind->rpc, "getblocktemplate", params);
 	if(!json || json_is_null(json))
 	{
-		// coind_error() reset auto_ready, and DCR gbt can fail
-		if (strcmp(coind->rpcencoding, "DCR") == 0)
-			debuglog("decred getblocktemplate failed\n");
-		else
-			coind_error(coind, "getblocktemplate");
+		// coind_error() reset auto_ready
+		coind_error(coind, "getblocktemplate");
 		return NULL;
 	}
 
@@ -307,7 +171,6 @@ YAAMP_JOB_TEMPLATE *coind_create_template(YAAMP_COIND *coind)
 	strcpy(templ->prevhash_hex, prev ? prev : "");
 	const char *flags = json_get_string(json_coinbaseaux, "flags");
 	strcpy(templ->flags, flags ? flags : "");
-	strcpy(templ->priceinfo, "");
 
 	// LBC Claim Tree (with wallet gbt patch)
 	const char *claim = json_get_string(json_result, "claimtrie");
@@ -333,13 +196,6 @@ YAAMP_JOB_TEMPLATE *coind_create_template(YAAMP_COIND *coind)
 			debuglog("claim_hex: %s\n", templ->claim_hex);
 		}
 	}
-	else if (strcmp(coind->symbol, "BITC") == 0) {
-		if (strlen(json_get_string(json_result, "priceinfo")) < 1000) {
-			templ->needpriceinfo = json_get_bool(json_result, "needpriceinfo");
-            if (templ->needpriceinfo)
-				strcpy(templ->priceinfo, json_get_string(json_result, "priceinfo"));
-		}
-	}
 
 	const char *sc_root = json_get_string(json_result, "stateroot");
 	const char *sc_utxo = json_get_string(json_result, "utxoroot");
@@ -351,10 +207,6 @@ YAAMP_JOB_TEMPLATE *coind_create_template(YAAMP_COIND *coind)
 		// same weird byte order as previousblockhash field
 		ser_string_be2(sc_root, &templ->extradata_be[ 0], 8);
 		ser_string_be2(sc_utxo, &templ->extradata_be[64], 8);
-	}
-
-	if (strcmp(coind->rpcencoding, "DCR") == 0) {
-		decred_fix_template(coind, templ, json_result);
 	}
 
 	if (!templ->height || !templ->nbits || !strlen(templ->prevhash_hex)) {
@@ -520,14 +372,7 @@ bool coind_create_job(YAAMP_COIND *coind, bool force)
 
 	CommonLock(&coind->mutex);
 
-	YAAMP_JOB_TEMPLATE *templ;
-
-	// DCR gbt block header is not compatible with getwork submit, so...
-
-	if (coind->usegetwork && strcmp(coind->rpcencoding, "DCR") == 0)
-		templ = decred_create_worktemplate(coind);
-	else
-		templ = coind_create_template(coind);
+	YAAMP_JOB_TEMPLATE *templ = coind_create_template(coind);
 
 	if(!templ)
 	{

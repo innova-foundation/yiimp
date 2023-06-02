@@ -51,9 +51,6 @@ struct YAAMP_JOB_TEMPLATE
 
 	char coinb1[4*1024];
 	char coinb2[4*1024];
-	char coinforsubmitb1[4*1024];
-	char coinforsubmitb2[4*1024];
-	bool isbitcash;
 
 	char header[256];
 
@@ -64,9 +61,6 @@ struct YAAMP_JOB_TEMPLATE
 
 	int auxs_size;
 	YAAMP_COIND_AUX *auxs[MAX_AUXS];
-	
-	bool needpriceinfo;
-	char priceinfo[1024];	
 };
 
 #define YAAMP_JOB_MAXSUBIDS		200
@@ -106,7 +100,6 @@ inline void job_delete(YAAMP_OBJECT *object)
 
 int job_get_jobid();
 
-void job_sort();
 void job_relock_clients(int jobid_old, int jobid_new);
 void job_unlock_clients(YAAMP_JOB *job=NULL);
 void job_assign_locked_clients(YAAMP_JOB *job);

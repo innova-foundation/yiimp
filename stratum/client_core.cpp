@@ -42,24 +42,6 @@ YAAMP_CLIENT *client_find_notify_id(const char *notify_id, bool reconnecting)
 	return NULL;
 }
 
-void client_sort()
-{
-	for(CLI li = g_list_client.first; li && li->next; li = li->next)
-	{
-		YAAMP_CLIENT *client1 = (YAAMP_CLIENT *)li->data;
-		YAAMP_CLIENT *client2 = (YAAMP_CLIENT *)li->next->data;
-
-//		if(client2->difficulty_actual > client1->difficulty_actual)
-		if(client2->speed > client1->speed*1.5)
-		{
-			g_list_client.Swap(li, li->next);
-			client_sort();
-
-			return;
-		}
-	}
-}
-
 int client_send_error(YAAMP_CLIENT *client, int error, const char *string)
 {
 	char buffer3[1024];

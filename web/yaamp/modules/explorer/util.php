@@ -151,23 +151,18 @@ function versionToAlgo($coin, $version)
 	$algos['MYR'] = array(
 		0=>'sha256', 1=>'scrypt', 2=>'myr-gr', 3=>'skein', 4=>'qubit', 5=>'yescrypt'
 	);
-	
 	$algos['DGB'] = array(
 		0=>'scrypt', 1=>'sha256', 2=>'myr-gr', 3=>'skein', 4=>'qubit'
 	);
-	
 	$algos['AUR'] = array(
 		0=>'sha256', 1=>'scrypt', 2=>'myr-gr', 3=>'skein', 4=>'qubit'
 	);
-	
 	$algos['DGC'] = array(
 		0=>'scrypt', 1=>'sha256', 2=>'x11'
 	);
-	
 	$algos['DUO'] = array(
 		0=>'sha256', 1=>'scrypt'
 	);
-	
 	$algos['J'] = array(
 		2 =>'sha256', 3=>'x11', 4=>'x13', 5=>'x15', 6=>'scrypt',
 		7 =>'nist5',  8 =>'myr-gr', 9=>'penta', 10=>'whirlpool',
@@ -176,7 +171,6 @@ function versionToAlgo($coin, $version)
 	$algos['GCH'] = array(
 		0=>'x12', 1=>'x11', 2=>'x13', 3=>'sha256', 4=>'blake2s'
 	);
-	
 	$algos['GLT'] = array(
 		0=>'sha256', 1=>'scrypt', 2=>'x11', 3=>'neoscrypt', 4=>'equihash', 5=>'yescrypt', 6=>'hmq1725', 
 		7=>'xevan', 8=>'nist5', 9=>'bitcore', 10=>'pawelhash', 11=>'x13', 12=>'x14', 13=>'x15', 14=>'x17', 
@@ -184,38 +178,24 @@ function versionToAlgo($coin, $version)
 		21=>'keccak', 22=>'zhash', 23=>'globalhash', 24=>'skein', 25=>'myr-gr', 26=>'qubit', 27=>'skunk', 
 		28=>'quark', 29=>'x16r'
 	);
-	
 	$algos['RICHX'] = array(
 		0=>'sha256', 1=>'scrypt', 2=>'myr-gr', 3=>'skein', 4=>'qubit'
 	);
-	
 	$algos['SFR'] = array(
 		0=>'sha256', 1=>'scrypt', 2=>'myr-gr', 3=>'x11', 4=>'blake'
 	);
-	
 	$algos['UIS'] = array(
 		0=>'lyra2v2', 1=>'skein', 2=>'qubit', 3=>'yescrypt', 4=>'x11'
 	);
-	
 	$algos['XVG'] = array(
 		0=>'scrypt', 1=>'scrypt', 2=>'myr-gr', 3=>'x17', 4=>'blake2s', 10=>'lyra2v2',
 	);
-	
 	$algos['XSH'] = array(
 		0=>'scrypt', 1=>'scrypt', 2=>'myr-gr', 3=>'x17', 4=>'blake2s', 10=>'lyra2v2', 11=>'x16s',
 	);
-	
 	$algos['ARG'] = array(
 		0=>'sha256', 1=>'scrypt', 2=>'lyra2v2', 3=>'myr-gr', 4=>'argon2d', 5=>'yescrypt',
 	);
-	$algos['BTA'] = array(
-		0=>'sha256', 1=>'scrypt', 2=>'x16r', 3=>'lyra2z', 4=>'x11', 5=>'nist5', 6=>'x16s',
-	);
-	$algos['PLSR'] = array(
-		0=>'curvehash', 1=>'minotaurx',
-	);
-	
-	
 	$symbol = $coin->symbol;
 	if (!empty($coin->symbol2)) $symbol = $coin->symbol2;
 
@@ -225,8 +205,6 @@ function versionToAlgo($coin, $version)
 		return arraySafeVal($algos[$symbol], ($version - 9), '');
 	else if($symbol == 'XVG')
 		return arraySafeVal($algos[$symbol], ($version >> 11), 'scrypt');
-	else if($symbol == 'PLSR')
-		return arraySafeVal($algos[$symbol], ($version >> 16) & 255, '');
 	else if($symbol == 'XSH')
 		return arraySafeVal($algos[$symbol], (($version-536870000) >> 11), 'scrypt');
 	else if (isset($algos[$symbol]))

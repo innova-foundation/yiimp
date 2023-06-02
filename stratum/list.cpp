@@ -41,8 +41,11 @@ CommonList::~CommonList()
 //	DeleteAll(NULL);
 }
 
-void CommonList::Enter()
+void CommonList::Enter(const char* str)
 {
+	timer = current_timestamp_dms();
+	strcpy(callfn, str);
+
 	if (g_debuglog_list) {
 		int i=0;
 		for(; i<10; i++)
@@ -63,6 +66,10 @@ void CommonList::Enter()
 void CommonList::Leave()
 {
 	pthread_mutex_unlock(&mutex);
+
+	long long etimer = current_timestamp_dms();
+	if (g_lockdebug && (etimer - timer > 0))
+		stratumlog("lock (%s) was held %lld microsecs\n", callfn, etimer - timer);
 }
 
 CLI CommonList::AddTail(void *data)

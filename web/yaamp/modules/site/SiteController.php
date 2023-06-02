@@ -8,7 +8,7 @@ class SiteController extends CommonController
 	// Security Note: You can rename this action as you
 	// want, to customize the admin entrance url...
 	//
-	public function actionmyadmin()
+	public function actionAdminRights()
 	{
 		$client_ip = arraySafeVal($_SERVER,'REMOTE_ADDR');
 		$valid = isAdminIP($client_ip);
@@ -443,12 +443,6 @@ class SiteController extends CommonController
 		$this->renderPartialAlgoMemcached('results/history_results');
 	}
 
-	// Home Tab : Coin Information (algo) on the bottom right
-	public function actionCoins_info()
-	{
-		$this->renderPartialAlgoMemcached('results/coins_info');
-	}
-
 	// Pool Tab : Top left panel with estimated profit per coin
 	public function actionMining_results()
 	{
@@ -507,11 +501,6 @@ class SiteController extends CommonController
 	public function actionUser_earning_results()
 	{
 		$this->renderPartial('results/user_earning_results');
-	}
-
-	public function actionWallet_found_results()
-	{
-		$this->renderPartial('results/wallet_found_results');
 	}
 
 	public function actionGraph_user_results()
@@ -610,7 +599,6 @@ class SiteController extends CommonController
 	public function actionBlock()
 	{
 		$this->render('block');
-		
 	}
 
 	public function actionBlock_results()

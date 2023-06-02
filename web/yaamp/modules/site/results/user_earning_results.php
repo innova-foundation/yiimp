@@ -19,6 +19,7 @@ WriteBoxHeader("Last $count Earnings: $user->username");
 $earnings = getdbolist('db_earnings', "userid=$user->id order by create_time desc limit :count", array(':count'=>$count));
 
 echo <<<EOT
+
 <style type="text/css">
 span.block { padding: 2px; display: inline-block; text-align: center; min-width: 75px; border-radius: 3px; }
 span.block.invalid  { color: white; background-color: #d9534f; }
@@ -26,12 +27,12 @@ span.block.immature { color: white; background-color: #f0ad4e; }
 span.block.exchange { color: white; background-color: #5cb85c; }
 span.block.cleared  { color: white; background-color: gray; }
 </style>
+
 <table class="dataGrid2">
 <thead>
 <tr>
 <td></td>
 <th>Name</th>
-<th align=right>Block</th>
 <th align=right>Amount</th>
 <th align=right>Percent</th>
 <th align=right>mBTC</th>
@@ -39,6 +40,7 @@ span.block.cleared  { color: white; background-color: gray; }
 <th align=right>Status</th>
 </tr>
 </thead>
+
 EOT;
 
 $showrental = (bool) YAAMP_RENTAL;
@@ -75,7 +77,6 @@ foreach($earnings as $earning)
 		continue;
 	}
 
-	$height = number_format($block->height, 0, '.', ' ');
 	$reward = altcoinvaluetoa($earning->amount);
 	$percent = $block->amount ? percentvaluetoa($earning->amount * 100/$block->amount) : 0;
 	$value = mbitcoinvaluetoa($earning->amount*$earning->price*1000);
@@ -84,7 +85,6 @@ foreach($earnings as $earning)
 	echo '<tr class="ssrow">';
 	echo '<td width="18"><img width="16" src="'.$coin->image.'"></td>';
 	echo '<td><b>'.$blockUrl.'</b><span style="font-size: .8em;"> ('.$coin->algo.')</span></td>';
-	echo '<td align="right" style="font-size: .8em;">'.$height.'</td>';
 	echo '<td align="right" style="font-size: .8em;"><b>'.$reward.' '.$coin->symbol_show.'</b></td>';
 	echo '<td align="right" style="font-size: .8em;">'.$percent.'%</td>';
 	echo '<td align="right" style="font-size: .8em;">'.$value.'</td>';
@@ -97,7 +97,7 @@ foreach($earnings as $earning)
 			$t = (int) ($coin->mature_blocks - $block->confirmations) * $coin->block_time;
 			$eta = "ETA: ".sprintf('%dh %02dmn', ($t/3600), ($t/60)%60);
 		}
-		echo '<span class="block immature" title="'.$eta.'">Immature ('.$block->confirmations.'/'.$coin->mature_blocks.')</span>';
+		echo '<span class="block immature" title="'.$eta.'">Immature ('.$block->confirmations.')</span>';
 	}
 
 	else if($earning->status == 1)
@@ -116,3 +116,7 @@ foreach($earnings as $earning)
 echo "</table>";
 
 echo "<br></div></div><br>";
+
+
+
+

@@ -94,7 +94,6 @@ function showPageHeader()
 	showItemHeader(controller()->id=='site'&&($action=='index' || $action=='wallet') && $ad, "/?address=$wallet", 'Wallet');
 	showItemHeader(controller()->id=='stats', '/stats', 'Graphs');
 	showItemHeader($action=='miners', '/site/miners', 'Miners');
-	showItemHeader(controller()->id=='api', '/site/api', 'API');
 	if (YIIMP_PUBLIC_EXPLORER)
 		showItemHeader(controller()->id=='explorer', '/explorer', 'Explorers');
 
@@ -141,8 +140,8 @@ function showPageFooter()
 	echo '<div class="footer">';
 	$year = date("Y", time());
 
-	echo "<p>&copy; $year ".'Innova-Foundation - '.
-		'<a href="https://github.com/innova-foundation/yiimp">Open source Project</a></p>';
+	echo "<p>&copy; $year ".YAAMP_SITE_NAME.' - '.
+		'<a href="http://github.com/tpruvot/yiimp">Open source Project</a></p>';
 
 	echo '</div><!-- footer -->';
 }

@@ -31,8 +31,8 @@ struct YAAMP_CLIENT_ALGO
 
 #define YAAMP_JOB_MAXHISTORY	16
 
-#define MIN_ADDRESS_LEN 3 /* BTC len can be as few as 26 chars, but gen. 33 or 34 */
-#define MAX_ADDRESS_LEN 98 /* BITC */
+#define MIN_ADDRESS_LEN 30 /* BTC len can be as few as 26 chars, but gen. 33 or 34 */
+#define MAX_ADDRESS_LEN 35 /* DCR */
 
 class YAAMP_CLIENT: public YAAMP_OBJECT
 {
@@ -61,6 +61,9 @@ public:
 	char username[1024];
 	char password[1024];
 	char worker[1024];
+
+	char coinbaseraw_last[1024];
+	char coinbasehash_last[1024];
 
 	double difficulty_actual;
 	double difficulty_remote;
@@ -120,7 +123,6 @@ YAAMP_CLIENT *client_find_notify_id(const char *notify_id, bool reconnecting);
 void get_next_extraonce1(char *extraonce1);
 void get_random_key(char *key);
 
-void client_sort();
 void client_block_ip(YAAMP_CLIENT *client, const char *reason);
 void client_block_ipset(YAAMP_CLIENT *client, const char *ipset_name);
 

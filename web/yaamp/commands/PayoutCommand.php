@@ -133,9 +133,12 @@ class PayoutCommand extends CConsoleCommand
 		if (empty($payouts) || empty($ids))
 			return 0;
 
+		$DCR = ($coin->rpcencoding == 'DCR' || $coin->getOfficialSymbol() == 'DCR');
+		$DGB = ($coin->rpcencoding == 'DGB' || $coin->getOfficialSymbol() == 'DGB');
+
 		$remote = new WalletRPC($coin);
 		$account = '';
-		if ($coin->rpcencoding == 'DCR') $account = '*';
+		if ($DCR || $DGB) $account = '*';
 		$rawtxs = $remote->listtransactions($account, 25000);
 
 		foreach ($ids as $uid => $user_addr)
@@ -229,7 +232,7 @@ class PayoutCommand extends CConsoleCommand
 				}
 			}
 			if ($totaldiff != 0.0)
-				echo "$user_addr: Total sent $totalsent (real), $totalpayouts (db) -> Diff $totaldiff $symbol\n";
+				echo "$user_addr: Total sent $totalsent (float), $totalpayouts (db) -> Diff $totaldiff $symbol\n";
 			else
 				echo "$user_addr: ok\n";
 		}

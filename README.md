@@ -1,19 +1,17 @@
-<h1 align="center"> Yiimp - Yaamp Fork </h1>
+[![Build Status](https://travis-ci.org/tpruvot/yiimp.svg?branch=next)](https://travis-ci.org/tpruvot/yiimp)
 
-<h3 align="left"> Requirements </h3>
+#yiimp - yaamp fork
 
-* Linux
-* Mysql
-* Php 7.3
-* Memcached
-* Nginx (Recommended)
-    - You can also use lighttpd or apache
+WARNINGS
+- Use at your own risks.
+- Usage of this software requires abilities with sysadmin, database admin, coin daemons, and sometimes a bit of programming. Running a production pool can literally be more work than a full-time job.
 
-<h2 align="left"> Configuration</h2>
-<h3 align="center">Nginx </h3>
+Required:
 
-Use this Config on nginx:
+	linux, mysql, php, memcached, a webserver (lighttpd or nginx recommended)
 
+
+Config for nginx:
 
 	location / {
 		try_files $uri @rewrite;
@@ -30,18 +28,15 @@ Use this Config on nginx:
 	}
 
 
-<h3 align="center"> Apache </h3>
-
-It should be something like that (already set in web/.htaccess):
+If you use apache, it should be something like that (already set in web/.htaccess):
 
 	RewriteEngine on
 
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteRule ^(.*) index.php?r=$1 [QSA]
 
-<h3 align="center"> Lighttpd </h3>
 
-use the following config:
+If you use lighttpd, use the following config:
 
 	$HTTP["host"] =~ "yiimp.ccminer.org" {
 	        server.document-root = "/var/yaamp/web"
@@ -55,7 +50,6 @@ use the following config:
 		url.access-deny = ( "~", ".dat", ".log" )
 	}
 
-<h2 align="left"> Setup Instructions </h2>
 
 For the database, import the initial dump present in the sql/ folder
 
@@ -119,11 +113,7 @@ and in the lighttpd config file:
 
 And finally remove the IP filter check in SiteController.php
 
-Using MySQLTuner:
 
-sudo apt-get install mysqltuner
-wait at least 24h
-in cli: mysqltuner
 
 There are logs generated in the /var/stratum folder and /var/log/stratum/debug.log for the php log.
 
@@ -141,23 +131,7 @@ Thanks to globalzon to have released the initial Yaamp source code.
 
 --
 
-You can support this project donating 
+You can support this project donating to tpruvot :
 
-tpruvot :
-
-	BTC : 1Auhps1mHZQpoX4mCcVL8odU81VakZQ6dR
-
-xiaolin1579 :
-
-	BTC : 1Hfa7BBHejzGj4CNRpV2Lh4xYGizX8c1A5
-	
-	BTC [BEP20] : 0xf6e4e1ce8b3801a612cfff40f29116fbf595b13e
-	
-	DOGE : D6oP3WPygJ4NR26XxfFydUsCiNS4oX9rqb
-	
-	USDT [BEP20] : 0xf6e4e1ce8b3801a612cfff40f29116fbf595b13e
-	
-	USDT [TRC20] : TF6vSbcFFGtwSRgvH1JqkQuVb9J4cszpGc
-	
-	RXD : 1N8WZpwSPaFvbaSMzDrPbLqbfM8tLVE87e
+BTC : 1Auhps1mHZQpoX4mCcVL8odU81VakZQ6dR
 

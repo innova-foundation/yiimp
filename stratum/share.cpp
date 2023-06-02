@@ -70,15 +70,6 @@ static void share_add_worker(YAAMP_CLIENT *client, YAAMP_JOB *job, bool valid, c
 	//	client->source->speed += client->difficulty_actual / g_current_algo->diff_multiplier * 42;
 	}
 
-	if(strstr(client->password, "m=solo"))
-	{
-		worker->solo = true;
-	}
-	else
-	{
-		worker->solo = false;
-	}
-
 	g_list_worker.Leave();
 }
 
@@ -129,7 +120,7 @@ void share_write(YAAMP_DB *db)
 	int count = 0;
 	int now = time(NULL);
 
-	char buffer[1024*1024] = "insert into shares (userid, workerid, coinid, jobid, pid, valid, extranonce1, difficulty, share_diff, time, algo, error, solo) values ";
+	char buffer[1024*1024] = "insert into shares (userid, workerid, coinid, jobid, pid, valid, extranonce1, difficulty, share_diff, time, algo, error) values ";
 	g_list_worker.Enter();
 
 	for(CLI li = g_list_worker.first; li; li = li->next)
@@ -143,9 +134,9 @@ void share_write(YAAMP_DB *db)
 		}
 
 		if(count) strcat(buffer, ",");
-		sprintf(buffer+strlen(buffer), "(%d, %d, %d, %d, %d, %d, %d, %f, %f, %d, '%s', %d, %d)",
+		sprintf(buffer+strlen(buffer), "(%d, %d, %d, %d, %d, %d, %d, %f, %f, %d, '%s', %d)",
 			worker->userid, worker->workerid, worker->coinid, worker->remoteid, pid,
-			worker->valid, worker->extranonce1, worker->difficulty, worker->share_diff, now, g_stratum_algo, worker->error_number, worker->solo);
+			worker->valid, worker->extranonce1, worker->difficulty, worker->share_diff, now, g_stratum_algo, worker->error_number);
 
 		// todo: link max_ttf ?
 		if((now - worker->ntime) > 15*60 || worker->ntime > now) {
@@ -156,7 +147,7 @@ void share_write(YAAMP_DB *db)
 		{
 			db_query(db, buffer);
 
-			strcpy(buffer, "insert into shares (userid, workerid, coinid, jobid, pid, valid, extranonce1, difficulty, share_diff, time, algo, error, solo) values ");
+			strcpy(buffer, "insert into shares (userid, workerid, coinid, jobid, pid, valid, extranonce1, difficulty, share_diff, time, algo, error) values ");
 			count = 0;
 		}
 
@@ -198,8 +189,6 @@ void block_prune(YAAMP_DB *db)
 		if(!block->confirmed)
 		{
 			int elapsed = 30;
-			// slow block time...
-			if(g_stratum_algo && !strcmp(g_stratum_algo, "decred")) elapsed = 60 * 15; // 15mn
 
 			if((block->created + elapsed) < time(NULL))
 				object_delete(block);

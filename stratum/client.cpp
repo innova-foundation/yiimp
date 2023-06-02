@@ -33,14 +33,6 @@ bool client_subscribe(YAAMP_CLIENT *client, json_value *json_params)
 	strcpy(client->extranonce1, client->extranonce1_default);
 	client->extranonce2size = client->extranonce2size_default;
 
-	// decred uses an extradata field in block header, 2 first uint32 are set by the miner
-	if (g_current_algo->name && !strcmp(g_current_algo->name,"decred")) {
-		memset(client->extranonce1, '0', sizeof(client->extranonce1));
-		memcpy(&client->extranonce1[16], client->extranonce1_default, YAAMP_EXTRANONCE2_SIZE*2);
-		client->extranonce1[24] = '\0';
-		client->extranonce2size = client->extranonce2size_default = 12;
-	}
-
 	get_random_key(client->notify_id);
 
 	if(json_params->u.array.length>0)
@@ -48,11 +40,8 @@ bool client_subscribe(YAAMP_CLIENT *client, json_value *json_params)
 		if (json_params->u.array.values[0]->u.string.ptr)
 			strncpy(client->version, json_params->u.array.values[0]->u.string.ptr, 1023);
 
-		if (strstr(client->version, "NiceHash"))
-      client->difficulty_actual = g_stratum_nicehash_difficulty;
-
-		if(strstr(client->version, "proxy") || strstr(client->version, "/3."))
-      client->reconnectable = false;
+		if(strstr(client->version, "NiceHash") || strstr(client->version, "proxy") || strstr(client->version, "/3."))
+			client->reconnectable = false;
 
 		if(strstr(client->version, "ccminer")) client->stats = true;
 		if(strstr(client->version, "cpuminer-multi")) client->stats = true;
@@ -231,13 +220,12 @@ bool client_authorize(YAAMP_CLIENT *client, json_value *json_params)
 			return false;
 		}
 	}
-/*
-	if (!is_base58(client->username)) 
-	{
+
+	if (!is_base58(client->username)) {
 		clientlog(client, "bad mining address %s", client->username);
 		return false;
 	}
-*/	
+
 	bool reset = client_initialize_multialgo(client);
 	if(reset) return false;
 
@@ -266,8 +254,7 @@ bool client_authorize(YAAMP_CLIENT *client, json_value *json_params)
 	}
 
 	// when auto exchange is disabled, only authorize good wallet address...
-	if (!g_autoexchange && !client_validate_user_address(client)) 
-	{
+	if (!g_autoexchange && !client_validate_user_address(client)) {
 
 		clientlog(client, "bad mining address %s", client->username);
 		client_send_result(client, "false");
@@ -278,7 +265,7 @@ bool client_authorize(YAAMP_CLIENT *client, json_value *json_params)
 
 		return false;
 	}
-	
+
 	client_send_result(client, "true");
 	client_send_difficulty(client, client->difficulty_actual);
 
@@ -676,3 +663,4 @@ void *client_thread(void *p)
 
 	pthread_exit(NULL);
 }
+

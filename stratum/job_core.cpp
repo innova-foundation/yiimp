@@ -1,23 +1,6 @@
 
 #include "stratum.h"
 
-void job_sort()
-{
-	for(CLI li = g_list_job.first; li && li->next; li = li->next)
-	{
-		YAAMP_JOB *job1 = (YAAMP_JOB *)li->data;
-		YAAMP_JOB *job2 = (YAAMP_JOB *)li->next->data;
-
-		if(job1->profit < job2->profit)
-		{
-			g_list_job.Swap(li, li->next);
-			job_sort();
-
-			return;
-		}
-	}
-}
-
 bool job_has_free_client()
 {
 	g_list_client.Enter();

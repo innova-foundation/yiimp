@@ -5,8 +5,8 @@
 #include <string.h>
 #include <stdio.h>
 
+#include <openssl/sha.h>
 #include "../sha3/sph_groestl.h"
-#include "sha256.h"
 
 void groestl_hash(const char* input, char* output, uint32_t len)
 {
@@ -33,9 +33,6 @@ void groestlmyriad_hash(const char* input, char* output, uint32_t len)
     sph_groestl512(&ctx_groestl, input, len);
     sph_groestl512_close(&ctx_groestl, &temp);
 
-    SHA256_CTX ctx_sha256;
-    SHA256_Init(&ctx_sha256);
-    SHA256_Update(&ctx_sha256, &temp, 64);
-    SHA256_Final((unsigned char*) output, &ctx_sha256);
+    SHA256(temp, 64, (unsigned char*) output);
 }
 

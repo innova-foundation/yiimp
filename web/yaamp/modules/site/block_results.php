@@ -29,14 +29,7 @@ showTableSorter('maintable', "{
 
 echo <<<end
 <style type="text/css">
-span.block { padding: 2px; display: inline-block; text-align: center; min-width: 15px; border-radius: 3px; }
-span.block.new       { color: white; background-color: #ad4ef0; }
-span.block.orphan    { color: white; background-color: #d9534f; }
-span.block.immature  { color: white; background-color: #f0ad4e; }
-span.block.confirmed { color: white; background-color: #5cb85c; }
-span.block2 { padding: 2px; display: inline-block; text-align: center; min-width: 35px; border-radius: 3px; margin-right: 5px; }
-span.block2.solo { color: white;  background-color: #4BB2C5 !important; }
-
+td.orphan { color: darkred; }
 </style>
 
 <thead>
@@ -46,8 +39,6 @@ span.block2.solo { color: white;  background-color: #4BB2C5 !important; }
 <th>Time</th>
 <th>Height</th>
 <th>Amount</th>
-<th>Type</th>
-<th>Effort</th>
 <th>Status</th>
 <th>Difficulty</th>
 <th>Share Diff</th>
@@ -96,22 +87,10 @@ foreach($db_blocks as $db_block)
 	echo '<td data="'.$db_block->time.'"><b>'.$d.' ago</b></td>';
 	echo '<td>'.$coin->createExplorerLink($db_block->height, array('height'=>$db_block->height)).'</td>';
 	echo '<td>'.$db_block->amount.'</td>';
-	
-	echo '<td>';
-	if($db_block->solo == '1') 
-		echo '<span class="block2 solo" title="Block was found by solo miner">solo</span>';
-	else echo '<span></span>'; 
-	echo "</td>";
-
-	if ($db_block->effort)	
-		echo '<td>'.$db_block->effort.'%</td>';
-	else
-		echo '<td>N/A</td>';
-	
 	echo '<td class="'.strtolower($db_block->category).'">';
 
 	if($db_block->category == 'orphan')
-		echo '<span class="block orphan">Orphan</span>';
+		echo "Orphan";
 
 	else if($db_block->category == 'immature') {
 		$eta = '';
@@ -119,17 +98,17 @@ foreach($db_blocks as $db_block)
 			$t = (int) ($coin->mature_blocks - $db_block->confirmations) * $coin->block_time;
 			$eta = "ETA: ".sprintf('%dh %02dmn', ($t/3600), ($t/60)%60);
 		}
-		echo '<span class="block immature" title="'.$eta.'">Immature ('.$db_block->confirmations.'/'.$coin->mature_blocks.')</span>';
+		echo "<span title=\"$eta\">Immature ({$db_block->confirmations})</span>";
 	}
 
 	else if($db_block->category == 'generate')
-		echo '<span class="block confirmed">Confirmed</span>';
+		echo 'Confirmed';
 
 	else if($db_block->category == 'stake')
 		echo "Stake ({$db_block->confirmations})";
 
 	else if($db_block->category == 'generated')
-		echo '<span class="block stake">Stake</span>';
+		echo 'Stake';
 
 	echo "</td>";
 
@@ -144,7 +123,6 @@ foreach($db_blocks as $db_block)
 		$user = getdbo('db_accounts', $db_block->userid);
 		$finder = $user ? substr($user->username, 0, 7).'...' : '';
 	}
-	
 	echo '<td>'.$finder.'</td>';
 	echo '<td style="font-size: .8em; font-family: monospace;">';
 	echo $coin->createExplorerLink($db_block->blockhash, array('hash'=>$db_block->blockhash));

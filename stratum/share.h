@@ -14,8 +14,6 @@ public:
 	uint32_t ntime;
 	double difficulty;
 	double share_diff; /* submitted hash diff */
-
-	bool solo;
 };
 
 inline void worker_delete(YAAMP_OBJECT *object)

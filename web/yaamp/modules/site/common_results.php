@@ -90,12 +90,7 @@ foreach($algos as $item)
 	if (!$coins && !$total1) continue;
 	$hashrate1 = dboscalar("SELECT avg(hashrate) FROM hashrate WHERE time>$t1 AND algo=:algo", array(':algo'=>$algo));
 
-	//$hashrate = dboscalar("SELECT hashrate FROM hashrate WHERE algo=:algo ORDER BY time DESC LIMIT 1", array(':algo'=>$algo));
-	$hashrate = controller()
-        ->memcache
-        ->get_database_scalar("current_hashrate-$algo", "select hashrate from hashrate where algo=:algo order by time desc limit 1", array(
-        ':algo' => $algo
-    ));
+	$hashrate = dboscalar("SELECT hashrate FROM hashrate WHERE algo=:algo ORDER BY time DESC LIMIT 1", array(':algo'=>$algo));
 	$hashrate_bad = dboscalar("SELECT hashrate_bad FROM hashrate WHERE algo=:algo ORDER BY time DESC LIMIT 1", array(':algo'=>$algo));
 	$bad = ($hashrate+$hashrate_bad)? round($hashrate_bad * 100 / ($hashrate+$hashrate_bad), 1): '';
 
@@ -560,7 +555,7 @@ $off = bitcoinvaluetoa($off);
 
 $btcaddr = YAAMP_BTCADDRESS; //'14LS7Uda6EZGXLtRrFEZ2kWmarrxobkyu9';
 
-echo '<a href="https://www.bitstamp.net/markets/btc/usd/" target="_blank">Bitstamp '.$mining->usdbtc.'</a>, ';
+echo '<a href="https://www.okcoin.com/market.do" target="_blank">Bitstamp '.$mining->usdbtc.'</a>, ';
 echo '<a href="https://blockchain.info/address/'.$btcaddr.'" target="_blank">wallet '.$btc->balance.'</a>, next payout '.$topay2.'<br/>';
 
 echo "pay $topay, renter $renter, marg $margin, $margin2<br/>";
