@@ -86,7 +86,6 @@ td.right { text-align: right; }
 <th align="right">Difficulty</th>
 <th align="right">Block</th>
 <th align="right">Time</th>
-<th>Effort</th>
 <th align="right">Type</th>
 <th align="right">Status</th>
 </tr>

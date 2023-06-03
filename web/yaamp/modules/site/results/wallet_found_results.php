@@ -60,7 +60,6 @@ span.solo
 <th data-sorter="numeric" >Amount</th>
 <th data-sorter="numeric" >Difficulty</th>
 <th data-sorter="numeric" >Time</th>
-<th data-sorter="numeric">Effort</th>
 <th data-sorter="text" >Type</th>
 <th data-sorter="text" >Status</th>
 </tr>

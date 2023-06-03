@@ -47,7 +47,6 @@ span.block2.solo { color: white;  background-color: #4BB2C5 !important; }
 <th>Height</th>
 <th>Amount</th>
 <th>Type</th>
-<th>Effort</th>
 <th>Status</th>
 <th>Difficulty</th>
 <th>Share Diff</th>
