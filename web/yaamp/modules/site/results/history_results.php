@@ -169,7 +169,7 @@ $total2 = bitcoinvaluetoa($total2);
 $total3 = bitcoinvaluetoa($total3);
 $total4 = bitcoinvaluetoa($total4);
 
-echo '<tr class="ssrow" style="border-top: 2px solid #eee;">';
+echo '<tr class="ssrow" style="border-top: 2px solid var(--border-color);">';
 echo '<td width="18px"><img width="16px" src="/images/btc.png"></td>';
 echo '<td colspan="2"><b>BTC Value</b></td>';
 
@@ -182,7 +182,7 @@ echo "</tr>";
 
 ///////////////////////////////////////////////////////////////////////
 
-echo '<tr class="ssrow" style="border-top: 2px solid #eee;">';
+echo '<tr class="ssrow" style="border-top: 2px solid var(--border-color);">';
 echo '<td width="18px"></td>';
 echo '<td colspan="2"><b>Avg Hashrate</b></td>';
 
@@ -195,7 +195,7 @@ echo '</tr>';
 
 ///////////////////////////////////////////////////////////////////////
 
-echo '<tr class="ssrow" style="border-top: 2px solid #eee;">';
+echo '<tr class="ssrow" style="border-top: 2px solid var(--border-color);">';
 echo '<td width="18px"></td>';
 echo '<td colspan="2"><b>mBTC/'.$algo_unit.'/d</b></td>';
 

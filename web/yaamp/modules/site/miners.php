@@ -12,31 +12,26 @@ $height = '240px';
 
 echo <<<end
 
-<div id='resume_update_button' style='color: #444; background-color: #ffd; border: 1px solid #eea;
+<div id='resume_update_button' style='color: var(--warning); background-color: var(--bg-secondary); border: 1px solid var(--border-color);
 	padding: 10px; margin-left: 20px; margin-right: 20px; margin-top: 15px; cursor: pointer; display: none;'
 	onclick='auto_page_resume();' align=center>
 	<b>Auto refresh is paused - Click to resume</b></div>
 
-<table cellspacing=20 width=100%>
-<tr><td valign=top width=50%>
+<div class="home-layout" style="flex-direction: column;">
+<div>
 
 <div id='miners_results'>
 <br><br><br><br><br><br><br><br><br><br>
 <br><br><br><br><br><br><br><br><br><br>
 </div>
 
-</td><td valign=top>
+</div><div>
 
 <div id='pool_current_results'>
 <br><br><br><br><br><br><br><br><br><br>
 </div>
 
-</td></tr></table>
-
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
+</div></div>
 
 <script>
 

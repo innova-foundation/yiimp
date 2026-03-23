@@ -13,7 +13,7 @@ class SiteController extends CommonController
 		$client_ip = arraySafeVal($_SERVER,'REMOTE_ADDR');
 		$valid = isAdminIP($client_ip);
 
-		if (arraySafeVal($_SERVER,'HTTP_X_FORWARDED_FOR','') != '') {
+		if (!YAAMP_USE_NGINX && arraySafeVal($_SERVER,'HTTP_X_FORWARDED_FOR','') != '') {
 			debuglog("admin access attempt via IP spoofing!");
 			$valid = false;
 		}

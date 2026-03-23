@@ -109,7 +109,7 @@ function graph_init_assets(data)
 			borderWidth: 1,
 			shadowWidth: 0,
 			shadowDepth: 0,
-			background: '#ffffff'
+			background: 'transparent'
 		},
 
 	});
@@ -161,7 +161,7 @@ function graph_init_negative(data)
 			borderWidth: 1,
 			shadowWidth: 0,
 			shadowDepth: 0,
-			background: '#ffffff'
+			background: 'transparent'
 		},
 
 	});
@@ -213,7 +213,7 @@ function graph_init_negative(data)
 // 			borderWidth: 1,
 // 			shadowWidth: 0,
 // 			shadowDepth: 0,
-// 			background: '#ffffff'
+// 			background: 'transparent'
 // 		},
 
 // 	});

@@ -60,13 +60,13 @@ if(!controller()->admin)
 	setcookie('wallets', implode("|", $recents), time()+60*60*24*30, '/');
 
 echo <<<END
-<div id='resume_update_button' style='color: #444; background-color: #ffd; border: 1px solid #eea;
+<div id='resume_update_button' style='color: var(--warning); background-color: var(--bg-secondary); border: 1px solid var(--border-color);
 	padding: 10px; margin-left: 20px; margin-right: 20px; margin-top: 15px; cursor: pointer; display: none;'
 	onclick='auto_page_resume();' align=center>
 	<b>Auto refresh is paused - Click to resume</b></div>
 
-<table cellspacing=20 width=100%>
-<tr><td valign=top width=50%>
+<div class="home-layout" style="flex-direction: column;">
+<div>
 END;
 
 if($user) echo <<<END
@@ -130,7 +130,7 @@ foreach($recents as $addr)
 	$coin = getdbo('db_coins', $user->coinid);
 
 	if($user->username == $username)
-		echo "<tr style='background-color: #e0d3e8;'><td width=24>";
+		echo "<tr style='background-color: var(--bg-tertiary);'><td width=24>";
 	else
 		echo "<tr class='ssrow'><td width=24>";
 
@@ -157,7 +157,7 @@ foreach($recents as $addr)
 
 echo "</table></form></div></div><br>";
 
-echo "</td><td valign=top>";
+echo "</div><div>";
 
 echo <<<END
 <div id='pool_current_results'>
@@ -174,12 +174,7 @@ END;
 
 echo <<<END
 
-</td></tr></table>
-
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
+</div></div>
 
 <script>
 
@@ -357,7 +352,7 @@ function graph_init_hashrate(data, algo)
 			borderWidth: 1,
 			shadowWidth: 0,
 			shadowDepth: 0,
-			background: '#ffffff'
+			background: 'transparent'
 		},
 
 		highlighter:
@@ -412,7 +407,7 @@ function graph_earnings_init(data)
 			borderWidth: 1,
 			shadowWidth: 0,
 			shadowDepth: 0,
-			background: '#ffffff'
+			background: 'transparent'
 		},
 
 	});
