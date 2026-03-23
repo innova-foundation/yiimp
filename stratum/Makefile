@@ -11,8 +11,10 @@ CFLAGS += -DNO_EXCHANGE
 #CFLAGS=-c -O2 -I /usr/include/mysql
 LDFLAGS=-O2 `mysql_config --libs`
 
-LDLIBS=iniparser/libiniparser.a algos/libalgos.a sha3/libhash.a -Isecp256k1/include secp256k1/.libs/libsecp256k1.a -lpthread -lgmp -lm -lstdc++ -lssl -lcrypto 
+LDLIBS=iniparser/libiniparser.a algos/libalgos.a sha3/libhash.a -Isecp256k1/include secp256k1/.libs/libsecp256k1.a -lpthread -lgmp -lm -lstdc++ -lssl -lcrypto
 LDLIBS+=-lmysqlclient
+
+#LDLIBS+=-lrandomx
 
 SOURCES=stratum.cpp db.cpp coind.cpp coind_aux.cpp coind_template.cpp coind_submit.cpp util.cpp list.cpp \
 	rpc.cpp job.cpp job_send.cpp job_core.cpp merkle.cpp share.cpp socket.cpp coinbase.cpp \
@@ -72,6 +74,7 @@ clean:
 	rm -f algos/honeycomb/*.o
 	rm -f algos/SWIFFTX/*.o
 	rm -f algos/yespower/*.o
+	rm -f algos/ethash/*.o
 	
 install: clean all
 	strip -s stratum
