@@ -413,7 +413,6 @@ class SiteController extends CommonController
 	protected function renderPartialAlgoMemcached($partial, $cachetime=15)
 	{
 		$algo = user()->getState('yaamp-algo');
-		$memcache = controller()->memcache->memcache;
 		$memkey = $algo.'_'.str_replace('/','_',$partial);
 		$html = controller()->memcache->get($memkey);
 
@@ -428,7 +427,8 @@ class SiteController extends CommonController
 		$html = ob_get_clean();
 		echo $html;
 
-		controller()->memcache->set($memkey, $html, $cachetime, MEMCACHE_COMPRESSED);
+		$flags = defined('MEMCACHE_COMPRESSED') ? MEMCACHE_COMPRESSED : 0;
+		controller()->memcache->set($memkey, $html, $cachetime, $flags);
 	}
 
 	// Pool Status : public right panel with all algos and live stats

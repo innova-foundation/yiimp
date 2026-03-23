@@ -211,6 +211,7 @@ hr {
 
 .main-left-inner {
 	padding: 12px 16px;
+	overflow-x: auto;
 }
 
 .main-left-inner ul {
@@ -278,8 +279,14 @@ select, input[type="text"] {
 	border-radius: 6px;
 	padding: 6px 10px;
 	font-family: inherit;
-	font-size: 14px;
+	font-size: 13px;
+	max-width: 100%;
 	transition: border-color 0.2s ease;
+}
+
+table.dataGrid2 select, table.dataGrid2 input[type="text"] {
+	font-size: 12px;
+	padding: 4px 6px;
 }
 
 select:focus, input[type="text"]:focus {
