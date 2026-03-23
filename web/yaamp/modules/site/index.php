@@ -28,8 +28,8 @@ $payout_freq = (YAAMP_PAYMENTS_FREQ / 3600) . " hours";
 <div class="main-left-title"><?=YAAMP_SITE_URL?></div>
 <div class="main-left-inner">
 <ul>
-<li>Welcome to <?=YAAMP_SITE_URL?>!</li>
-<li>This mining pool is built on the YiiMP framework, managed by the Innova-Foundation Dev Team.</li>
+<li>Welcome to the official <b>Innova</b> mining pool!</li>
+<li>Mine INN on mainnet or tINN on testnet using the <b>Tribus</b> algorithm.</li>
 <li>No registration required &mdash; payouts are made in the currency you mine. Use your wallet address as username.</li>
 <li>Payouts are made automatically every <?= $payout_freq ?> for all balances above <b><?= $min_payout ?></b>, or <b><?= $min_sunday ?></b> on Sunday.</li>
 <li>For some coins, there is an initial delay before the first payout. Please wait at least 8 hours before asking for support.</li>
@@ -173,41 +173,52 @@ foreach($list as $coin)
 <div class="loading-placeholder"></div>
 </div>
 
-<!-- Coin Links -->
-<div class="main-left-box"><div class="main-left-title">Coin Links</div>
+<!-- Innova Networks -->
+<div class="main-left-box"><div class="main-left-title">Innova (INN) &mdash; Tribus Algorithm</div>
 <div class="main-left-inner">
 
 <table class="dataGrid2">
 <thead>
 <tr>
 <th></th>
-<th>Name</th>
-<th align="center">Info</th>
-<th align="center">WWW</th>
-<th align="center">Discord</th>
-<th align="center">Expl</th>
-<th align="center">Github</th>
-<th align="center">Exch</th>
-<th align="center">Twitter</th>
-<th align="center">Wallet*</th>
-<th align="center">Nodes</th>
+<th>Network</th>
+<th>Symbol</th>
+<th>Algo</th>
+<th>Port</th>
+<th>Status</th>
 </tr>
+</thead>
+<tbody>
+<tr class="ssrow">
+<td><img width="16" src="/images/innova.png"></td>
+<td><b>Innova Mainnet</b></td>
+<td><b>INN</b></td>
+<td>tribus</td>
+<td><b>8533</b></td>
+<td style="color: var(--success);">Active</td>
+</tr>
+<tr class="ssrow">
+<td><img width="16" src="/images/innova.png"></td>
+<td><b>Innova Testnet</b></td>
+<td><b>tINN</b></td>
+<td>tribus</td>
+<td><b>18533</b></td>
+<td style="color: var(--warning);">Testnet</td>
+</tr>
+</tbody>
+</table>
 
-<!-- INNOVA COIN -->
-</thead><tbody><tr class="ssrow"><td width="18px"><img width="16px" src="/images/innova.png">
-</td><td><b>
-<a href="/site/block?id=1426">Innova</a></b></td>
-<td align="center"><a href="https://bitcointalk.org/index.php?topic=2291517.0" target="_blank"><img width="16px" src="images/btc.png"></a></td>
-<td align="center"><a href="https://innova-foundation.com" target="_blank"><img width="16px" src="images/www.png"></a></td>
-<td align="center"><a href="https://discord.gg/mNM59znzNG" target="_blank"><img width="16px" src="images/discordm.png"></a></td>
-<td align="center"><a href="https://chainz.cryptoid.info/inn/" target="_blank"><img width="16px" src="images/explorer.png"></a></td>
-<td align="center"><a href="https://github.com/innova-foundation/innova" target="_blank"><img width="16px" src="images/githubm.png"></a></td>
-<td align="center"><a href="https://www.probit.com/app/exchange/INN-USDT" target="_blank"><img width="16px" src="images/exchange.png"></a></td>
-<td align="center"><a href="https://twitter.com/Innova_Fdn" target="_blank"><img width="16px" src="images/Twitter.png"></a></td>
-<td align="center"><a href="https://github.com/innova-foundation/innova/releases" target="_blank"><img width="16px" src="images/wallet.png"></a></td>
-<td align="center"><a href="http://<?=YAAMP_SITE_URL?>/explorer/peers?id=1426" target="_blank"><img width="16px" src="images/addnodes.png"></a></td>
+<div style="margin-top: 12px; display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.9em;">
+<a href="https://innova-foundation.com" target="_blank">Website</a>
+<a href="https://github.com/innova-foundation/innova" target="_blank">GitHub</a>
+<a href="https://chainz.cryptoid.info/inn/" target="_blank">Explorer</a>
+<a href="https://www.probit.com/app/exchange/INN-USDT" target="_blank">Exchange</a>
+<a href="https://discord.gg/mNM59znzNG" target="_blank">Discord</a>
+<a href="https://twitter.com/Innova_Fdn" target="_blank">Twitter</a>
+<a href="https://bitcointalk.org/index.php?topic=2291517.0" target="_blank">BitcoinTalk</a>
+<a href="https://github.com/innova-foundation/innova/releases" target="_blank">Wallet Downloads</a>
+</div>
 
-</tr></tbody></table>
 </div></div>
 
 </div>
