@@ -3,25 +3,25 @@
 {
 	position: absolute;
 	display: none;
-	border: 1px solid #778;
+	border: 1px solid var(--border-color, #2a2e3d);
 	z-index: 10;
 	width: 640px;
-
-	background: white;
+	background: var(--bg-secondary, #1a1d27);
+	color: var(--text-primary, #e4e6eb);
 	padding: 10px;
+	border-radius: 8px;
+	box-shadow: var(--shadow, 0 2px 8px rgba(0,0,0,0.3));
 }
 
 .embed-box
 {
 	position: absolute;
 	display: none;
-	border: 1px solid #778;
+	border: 1px solid var(--border-color, #2a2e3d);
 	z-index: 10;
 	right: 0;
-	
-	background: white;
+	background: var(--bg-secondary, #1a1d27);
+	color: var(--text-primary, #e4e6eb);
 	padding: 10px;
+	border-radius: 8px;
 }
-
-
-

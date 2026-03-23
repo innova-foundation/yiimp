@@ -4,19 +4,16 @@ require('misc.php');
 echo <<<END
 
 <!doctype html>
-<!--[if IE 7 ]>		 <html class="no-js ie ie7 lte7 lte8 lte9" lang="en-US"> <![endif]-->
-<!--[if IE 8 ]>		 <html class="no-js ie ie8 lte8 lte9" lang="en-US"> <![endif]-->
-<!--[if IE 9 ]>		 <html class="no-js ie ie9 lte9>" lang="en-US"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js" lang="en-US"> <!--<![endif]-->
+<html lang="en-US">
 
 <head>
 
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="description" content="Yii mining pools for alternative crypto currencies">
-<meta name="keywords" content="anonymous,mining,pool,maxcoin,bitcoin,altcoin,auto,switch,exchange,profit,decred,scrypt,x11,x13,x14,x15,lbry,lyra2re,neoscrypt,sha256,quark,skein2">
+<meta name="description" content="Cryptocurrency mining pool with auto profit switching and auto exchange">
+<meta name="keywords" content="mining,pool,bitcoin,altcoin,auto,switch,exchange,profit,crypto,stratum">
 
 END;
 
@@ -28,37 +25,16 @@ echo CHtml::cssFile("/extensions/jquery/themes/ui-lightness/jquery-ui.css");
 echo CHtml::cssFile('/yaamp/ui/css/main.css');
 echo CHtml::cssFile('/yaamp/ui/css/table.css');
 
-//echo CHtml::scriptFile('/extensions/jquery/js/jquery-1.8.3-dev.js');
-//echo CHtml::scriptFile('/extensions/jquery/js/jquery-ui-1.9.1.custom.min.js');
-
 $cs = app()->getClientScript();
 $cs->registerCoreScript('jquery.ui');
-//$cs->registerScriptFile('/yaamp/ui/js/jquery.tablesorter.js', CClientScript::POS_END);
 
 echo CHtml::scriptFile('/yaamp/ui/js/jquery.tablesorter.js');
-
-// if(!controller()->admin)
-// echo <<<end
-// <script>
-// (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-// (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-// m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-// })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-// ga('create', 'UA-58136019-1', 'auto');
-// ga('send', 'pageview');
-
-// $(document).ajaxSuccess(function(){ga('send', 'pageview');});
-
-// </script>
-// end;
 
 echo "</head>";
 
 ///////////////////////////////////////////////////////////////
 
 echo '<body class="page">';
-echo '<a href="/site/mainbtc" style="display: none;">main</a>';
 
 showPageHeader();
 showPageContent($content);
@@ -74,16 +50,15 @@ function showItemHeader($selected, $url, $name)
 	if($selected) $selected_text = "class='selected'";
 	else $selected_text = '';
 
-	echo "<span><a $selected_text href='$url'>$name</a></span>";
-	echo "&nbsp;";
+	echo "<a $selected_text href='$url'>$name</a>";
 }
 
 function showPageHeader()
 {
-	echo '<div class="tabmenu-out">';
+	echo '<nav class="tabmenu-out">';
 	echo '<div class="tabmenu-inner">';
 
-	echo '&nbsp;&nbsp;<a href="/">'.YAAMP_SITE_NAME.'</a>';
+	echo '<a href="/" style="color: var(--text-primary); font-weight: 700; margin-right: 8px;">'.YAAMP_SITE_NAME.'</a>';
 
 	$action = controller()->action->id;
 	$wallet = user()->getState('yaamp-wallet');
@@ -99,7 +74,7 @@ function showPageHeader()
 		showItemHeader(controller()->id=='explorer', '/explorer', 'Explorers');
 
 	if (YIIMP_PUBLIC_BENCHMARK)
-		showItemHeader(controller()->id=='bench', '/bench', 'Benchs');
+		showItemHeader(controller()->id=='bench', '/bench', 'Benchmarks');
 
 	if (YAAMP_RENTAL)
 		showItemHeader(controller()->id=='renting', '/renting', 'Rental');
@@ -123,17 +98,17 @@ function showPageHeader()
 			showItemHeader(controller()->id=='nicehash', '/nicehash', 'Nicehash');
 	}
 
-	echo '<span style="float: right;">';
+	echo '<span style="flex: 1;"></span>';
 
 	$mining = getdbosql('db_mining');
 	$nextpayment = date('H:i T', $mining->last_payout+YAAMP_PAYMENTS_FREQ);
 	$eta = ($mining->last_payout+YAAMP_PAYMENTS_FREQ) - time();
 	$eta_mn = 'in '.round($eta / 60).' minutes';
 
-	echo '<span id="nextpayout" style="font-size: .8em;" title="'.$eta_mn.'">Next Payout: '.$nextpayment.'</span>';
+	echo '<span id="nextpayout" title="'.$eta_mn.'">Next Payout: '.$nextpayment.'</span>';
 
 	echo "</div>";
-	echo "</div>";
+	echo "</nav>";
 }
 
 function showPageFooter()
@@ -141,10 +116,10 @@ function showPageFooter()
 	echo '<div class="footer">';
 	$year = date("Y", time());
 
-	echo "<p>&copy; $year ".'Innova-Foundation - '.
-		'<a href="https://github.com/innova-foundation/yiimp">Open source Project</a></p>';
+	echo "<p>&copy; $year ".'Powered by '.
+		'<a href="https://github.com/innova-foundation/yiimp">YiiMP</a></p>';
 
-	echo '</div><!-- footer -->';
+	echo '</div>';
 }
 
 
