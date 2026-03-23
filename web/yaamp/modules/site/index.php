@@ -107,13 +107,52 @@ foreach($list as $coin)
 </ul>
 </div></div>
 
-<!-- Miner Downloads -->
+<!-- Tribus Mining Software -->
 <div class="main-left-box">
-<div class="main-left-title">Miner Downloads</div>
+<div class="main-left-title">Tribus Mining Software</div>
 <div class="main-left-inner">
-<ul>
-<li><b>CCMiner</b> &mdash; <a href='https://github.com/tpruvot/ccminer/releases'>Download CCMiner</a></li>
-<li><b>CPUMiner-Multi</b> &mdash; <a href='https://github.com/tpruvot/cpuminer-multi/releases'>Download CPUMiner-Multi</a></li>
+
+<table class="dataGrid2">
+<thead>
+<tr><th>Miner</th><th>Type</th><th>Hardware</th><th>Status</th></tr>
+</thead>
+<tbody>
+<tr class="ssrow">
+<td><b><a href='https://github.com/JayDDee/cpuminer-opt/releases'>cpuminer-opt</a></b></td>
+<td>CPU</td><td>x86_64</td>
+<td style="color: var(--success);">Active</td>
+</tr>
+<tr class="ssrow">
+<td><b><a href='https://github.com/andru-kun/wildrig-multi/releases'>WildRig Multi</a></b></td>
+<td>GPU</td><td>NVIDIA / AMD / Intel</td>
+<td style="color: var(--success);">Active</td>
+</tr>
+<tr class="ssrow">
+<td><b><a href='https://github.com/tpruvot/ccminer/releases'>CCMiner</a></b></td>
+<td>GPU</td><td>NVIDIA (CUDA)</td>
+<td style="color: var(--text-secondary);">Inactive</td>
+</tr>
+<tr class="ssrow">
+<td><b><a href='https://github.com/tpruvot/sph-sgminer-tribus/releases'>sgminer-tribus</a></b></td>
+<td>GPU</td><td>AMD (OpenCL)</td>
+<td style="color: var(--text-secondary);">Inactive</td>
+</tr>
+<tr class="ssrow">
+<td><b><a href='https://github.com/KL0nLutiy/sgminer-kl/releases'>sgminer-kl</a></b></td>
+<td>GPU</td><td>AMD (OpenCL)</td>
+<td style="color: var(--text-secondary);">Inactive</td>
+</tr>
+<tr class="ssrow">
+<td><b><a href='https://github.com/tpruvot/cpuminer-multi/releases'>cpuminer-multi</a></b></td>
+<td>CPU</td><td>x86_64</td>
+<td style="color: var(--text-secondary);">Inactive</td>
+</tr>
+</tbody>
+</table>
+
+<ul style="margin-top: 8px;">
+<li><b>Recommended:</b> cpuminer-opt (CPU) or WildRig Multi (GPU) &mdash; both actively maintained.</li>
+<li>Use <code>-a tribus</code> as the algorithm flag for all miners.</li>
 </ul>
 </div>
 </div>
