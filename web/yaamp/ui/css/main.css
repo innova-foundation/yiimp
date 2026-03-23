@@ -431,6 +431,53 @@ select:focus, input[type="text"]:focus {
 /* Stratum Config Builder                         */
 /* ============================================== */
 
+.mine-form {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	margin-bottom: 12px;
+}
+
+.mine-row {
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.mine-field {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-width: 0;
+}
+
+.mine-field-solo {
+	flex: 0 0 70px;
+}
+
+.mine-field label {
+	font-size: 0.75em;
+	color: var(--text-secondary);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	margin-bottom: 4px;
+	font-weight: 600;
+}
+
+.mine-field select,
+.mine-field input[type="text"] {
+	width: 100%;
+}
+
+@media (max-width: 768px) {
+	.mine-row {
+		flex-direction: column;
+	}
+	.mine-field-solo {
+		flex: 1;
+	}
+}
+
 .stratum-output {
 	padding: 12px 16px;
 	background-color: var(--bg-tertiary);

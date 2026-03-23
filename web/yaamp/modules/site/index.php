@@ -42,72 +42,63 @@ $payout_freq = (YAAMP_PAYMENTS_FREQ / 3600) . " hours";
 <div class="main-left-title">How to Mine</div>
 <div class="main-left-inner">
 
-<table class="dataGrid2" style="margin-bottom: 12px;">
-	<thead>
-		<tr>
-			<th>Stratum</th>
-			<th>Coin</th>
-			<th>Wallet Address</th>
-			<th>Rig Name</th>
-			<th>Solo</th>
-		</tr>
-	</thead>
-<tbody>
-	<tr>
-		<td>
-			<select id="drop-stratum" onchange="generate()">
-			<option value="">Main Stratum</option>
-			</select>
-		</td>
-
-		<td>
-			<select id="drop-coin" onchange="generate()">
-        <?php
-        $list = getdbolist('db_coins', "enable and visible and auto_ready order by algo asc");
-
-        $algoheading="";
-        $count=0;
-        foreach($list as $coin)
-        {
-        	$name = substr($coin->name, 0, 18);
-        	$symbol = $coin->getOfficialSymbol();
-                $id = $coin->id;
-                $algo = $coin->algo;
-
-        	$port_count = getdbocount('db_stratums', "algo=:algo and symbol=:symbol", array(':algo' => $algo,':symbol' => $coin->symbol));
-
-        	$port_db = getdbosql('db_stratums', "algo=:algo and symbol=:symbol", array(':algo' => $algo,':symbol' => $coin->symbol));
-
-       		if ($port_count >= 1){$port = $port_db->port;}else{$port = '0000';}
-       		if($count == 0){ echo "<option disabled=''>$algo";}elseif($algo != $algoheading){echo "<option disabled=''>$algo</option>";}
-        	echo "<option data-port='$port' data-algo='-a $algo' data-symbol='$coin->symbol'>$name ($symbol)</option>";
-
-       		$count=$count+1;
-        	$algoheading=$algo;
-        }
-        ?>
-			</select>
-		</td>
-		<td>
-			<input id="text-wallet" type="text" size="30" placeholder="Your wallet address" onkeyup="generate()">
-		</td>
-		<td>
-			<input id="text-rig-name" type="text" size="10" placeholder="001" onkeyup="generate()">
-		</td>
-		<td>
-			<select id="drop-solo" onchange="generate()">
-			<option value="">No</option>
-			<option value=",m=solo">Yes</option>
-			</select>
-		</td>
-	</tr>
-</tbody>
-<tbody>
-	<tr>
-		<td colspan="5"><p class="stratum-output" id="output">-a  -o stratum+tcp://<?=YAAMP_STRATUM_URL?>:0000 -u . -p c=</p></td>
-	</tr>
-</tbody>
-</table>
+<div class="mine-form">
+<div class="mine-row">
+	<div class="mine-field">
+		<label>Coin</label>
+		<select id="drop-coin" onchange="generate()">
+<?php
+$list = getdbolist('db_coins', "enable and visible and auto_ready order by algo asc");
+$algoheading="";
+$count=0;
+foreach($list as $coin)
+{
+	$name = substr($coin->name, 0, 18);
+	$symbol = $coin->getOfficialSymbol();
+	$id = $coin->id;
+	$algo = $coin->algo;
+	$port_count = getdbocount('db_stratums', "algo=:algo and symbol=:symbol", array(':algo' => $algo,':symbol' => $coin->symbol));
+	$port_db = getdbosql('db_stratums', "algo=:algo and symbol=:symbol", array(':algo' => $algo,':symbol' => $coin->symbol));
+	if ($port_count >= 1){$port = $port_db->port;}else{$port = '0000';}
+	if($count == 0){ echo "<option disabled=''>$algo";}elseif($algo != $algoheading){echo "<option disabled=''>$algo</option>";}
+	echo "<option data-port='$port' data-algo='-a $algo' data-symbol='$coin->symbol'>$name ($symbol)</option>";
+	$count=$count+1;
+	$algoheading=$algo;
+}
+?>
+		</select>
+	</div>
+	<div class="mine-field">
+		<label>Stratum</label>
+		<select id="drop-stratum" onchange="generate()">
+		<option value="">Main</option>
+		</select>
+	</div>
+	<div class="mine-field mine-field-solo">
+		<label>Solo</label>
+		<select id="drop-solo" onchange="generate()">
+		<option value="">No</option>
+		<option value=",m=solo">Yes</option>
+		</select>
+	</div>
+</div>
+<div class="mine-row">
+	<div class="mine-field" style="flex:3">
+		<label>Wallet Address</label>
+		<input id="text-wallet" type="text" placeholder="Your wallet address" onkeyup="generate()">
+	</div>
+	<div class="mine-field" style="flex:1">
+		<label>Rig Name</label>
+		<input id="text-rig-name" type="text" placeholder="001" onkeyup="generate()">
+	</div>
+</div>
+<div class="mine-row">
+	<div class="mine-field" style="flex:1">
+		<label>Command</label>
+		<div class="stratum-output" id="output">-a  -o stratum+tcp://<?=YAAMP_STRATUM_URL?>:0000 -u . -p c=</div>
+	</div>
+</div>
+</div>
 
 <ul>
 <li>&lt;WALLET_ADDRESS&gt; must be valid for the currency you mine. <b>Do not use a BTC address here</b> &mdash; auto exchange is disabled on these stratums.</li>

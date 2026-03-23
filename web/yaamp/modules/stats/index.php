@@ -87,13 +87,12 @@ $dtMax3 = $dtMin3 + (8*4) * $days;
 
 echo <<<end
 
-<div id='resume_update_button' style='color: #444; background-color: #ffd; border: 1px solid #eea;
-	padding: 10px; margin-left: 20px; margin-right: 20px; margin-top: 15px; cursor: pointer; display: none;'
-	onclick='auto_page_resume();' align=center>
-	<b>Auto refresh is paused - Click to resume</b></div>
+<div id='resume_update_button' class='main-left-box' style='color: var(--warning); padding: 14px; margin: 16px 0; cursor: pointer; display: none; text-align: center;'
+	onclick='auto_page_resume();'>
+	<b>Auto refresh is paused &mdash; Click to resume</b></div>
 
-<div align=right>
-Select Algo: <select id='algo_select'>$string</select>&nbsp;
+<div style="text-align: right; margin-bottom: 16px;">
+Select Algo: <select id='algo_select'>$string</select>
 </div>
 
 <script>
@@ -106,73 +105,44 @@ $('#algo_select').change(function(event)
 
 </script>
 
-<table width=100%><tr><td valign=top width=33%>
-
 <div class="main-left-box">
 <div class="main-left-title">Last 48 Hours</div>
 <div class="main-left-inner">
-
 <ul>
 <li>Average Hashrate: <b>{$hashrate1}h/s</b></li>
 <li>BTC Value: <b>$total1</b></li>
 <li>BTC/{$algo_unit}/d: <b>$btcmhday1</b></li>
 </ul>
-
-<br>
-<div id='graph_results_1' style='height: $height;'></div><br><br>
-<div id='graph_results_2' style='height: $height;'></div><br><br>
-<div id='graph_results_3' style='height: $height;'></div><br><br>
-
-</div></div><br>
-
-</td>
-<td></td>
-<td valign=top width=33%>
+<div id='graph_results_1' style='height: $height; margin-top: 12px;'></div>
+<div id='graph_results_2' style='height: $height; margin-top: 12px;'></div>
+<div id='graph_results_3' style='height: $height; margin-top: 12px;'></div>
+</div></div>
 
 <div class="main-left-box">
 <div class="main-left-title">Last 7 Days</div>
 <div class="main-left-inner">
-
 <ul>
 <li>Average Hashrate: <b>{$hashrate2}h/s</b></li>
 <li>BTC Value: <b>$total2</b></li>
 <li>BTC/{$algo_unit}/d: <b>$btcmhday2</b></li>
 </ul>
-
-<br>
-<div id='graph_results_4' style='height: $height;'></div><br><br>
-<div id='graph_results_5' style='height: $height;'></div><br><br>
-<div id='graph_results_6' style='height: $height;'></div><br><br>
-
-</div></div><br>
-
-</td>
-<td></td>
-<td valign=top width=33%>
+<div id='graph_results_4' style='height: $height; margin-top: 12px;'></div>
+<div id='graph_results_5' style='height: $height; margin-top: 12px;'></div>
+<div id='graph_results_6' style='height: $height; margin-top: 12px;'></div>
+</div></div>
 
 <div class="main-left-box">
 <div class="main-left-title">Last 30 Days</div>
 <div class="main-left-inner">
-
 <ul>
 <li>Average Hashrate: <b>{$hashrate3}h/s</b></li>
 <li>BTC Value: <b>$total3</b></li>
 <li>BTC/{$algo_unit}/d: <b>$btcmhday3</b></li>
 </ul>
-
-<br>
-<div id='graph_results_7' style='height: $height;'></div><br><br>
-<div id='graph_results_8' style='height: $height;'></div><br><br>
-<div id='graph_results_9' style='height: $height;'></div><br><br>
-
-</div></div><br>
-
-</td></tr></table>
-
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
+<div id='graph_results_7' style='height: $height; margin-top: 12px;'></div>
+<div id='graph_results_8' style='height: $height; margin-top: 12px;'></div>
+<div id='graph_results_9' style='height: $height; margin-top: 12px;'></div>
+</div></div>
 
 <script type="text/javascript">
 

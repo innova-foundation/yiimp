@@ -12,17 +12,14 @@ $height = '240px';
 
 echo <<<end
 
-<div id='resume_update_button' style='color: #444; background-color: #ffd; border: 1px solid #eea;
-	padding: 10px; margin-left: 20px; margin-right: 20px; margin-top: 15px; cursor: pointer; display: none;'
-	onclick='auto_page_resume();' align=center>
-<b>Auto refresh is paused - Click to resume</b></div>
+<div id='resume_update_button' class='main-left-box' style='color: var(--warning); padding: 14px; margin: 16px 0; cursor: pointer; display: none; text-align: center;'
+	onclick='auto_page_resume();'>
+<b>Auto refresh is paused &mdash; Click to resume</b></div>
 
-<table cellspacing=20 width=100%>
-<tr><td valign=top width=50%>
+<div class="home-layout" style="flex-direction: column;">
 
 <div id='mining_results'>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
+<div class="loading-placeholder"></div>
 </div>
 end;
 
@@ -49,23 +46,16 @@ if ($algo_factor == 1000000) $algo_unit = 'Th';
 if ($algo_factor == 1000000000) $algo_unit = 'Ph';
 
 echo <<<end
-</td><td valign=top>
 
 <div id='pool_current_results'>
-<br><br><br><br><br><br><br><br><br><br>
+<div class="loading-placeholder"></div>
 </div>
 
 <div id='found_results'>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
+<div class="loading-placeholder"></div>
 </div>
 
-</td></tr></table>
-
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
+</div>
 
 <script>
 
