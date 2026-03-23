@@ -35,7 +35,6 @@ void panthera_hash(const char* input, char* output, uint32_t len)
     pthread_mutex_lock(&panthera_mutex);
 
     if (!panthera_init) {
-
         rx_flags flags = randomx_get_flags();
         if (!panthera_cache) {
             panthera_cache = randomx_alloc_cache(flags | RX_FLAG_JIT);
@@ -43,7 +42,6 @@ void panthera_hash(const char* input, char* output, uint32_t len)
                 panthera_cache = randomx_alloc_cache(flags);
         }
         if (panthera_cache) {
-
             char seed_key[40] = "panthera";
             memcpy(seed_key + 8, input, len < 32 ? len : 32);
             randomx_init_cache(panthera_cache, seed_key, 8 + (len < 32 ? len : 32));

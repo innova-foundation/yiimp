@@ -83,7 +83,6 @@ void randomx_hash(const char* input, char* output, uint32_t len)
     pthread_mutex_lock(&rx_mutex);
 
     if (!rx_initialized || !rx_vm) {
-
         if (!rx_initialized && len >= 32) {
             pthread_mutex_unlock(&rx_mutex);
             randomx_stratum_init(input);
