@@ -13,7 +13,7 @@ function doExbitronTrading()
 {
 	$withdraw_min = 0.05;
 	$exclude_cancel_order = array('VTL');
-	$mysqli = mysql_connect();
+	$mysqli = yaamp_mysql_connect();
 	$exchange = 'exbitron';
 	$updatebalances = true;
 	$dtime = 1;
@@ -278,7 +278,7 @@ function endsWith($name,$match)
 
 
 
-function mysql_connect()
+function yaamp_mysql_connect()
 {
 	echo "Mysql Connect\n";
 	$mysqli = new mysqli(YAAMP_DBHOST, YAAMP_DBUSER, YAAMP_DBPASSWORD,YAAMP_DBNAME);
