@@ -1,4 +1,5 @@
 <?php
+// DEPRECATED: Empoex exchange closed ~2017. This integration is non-functional.
 
 // https://api.empoex.com/marketinfo/[LOG-BTC]
 

@@ -1,4 +1,5 @@
 <?php
+// DEPRECATED: Altilly exchange closed 2023. This integration is non-functional.
 
 // https://api.altilly.com/api/public/
 

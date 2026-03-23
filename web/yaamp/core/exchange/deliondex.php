@@ -1,4 +1,5 @@
 <?php
+// DEPRECATED: Deliondex exchange closed. This integration is non-functional.
 // https://api.delion.online/public/v1/tickers
 function deliondex_api_query($method, $params='')
 {

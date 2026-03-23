@@ -1,4 +1,5 @@
 <?php
+// DEPRECATED: Alcurex exchange closed. This integration is non-functional.
 
 // https://alcurex.org/index.php/crypto/api_documentation
 

@@ -1,4 +1,5 @@
 <?php
+// DEPRECATED: Swiftex exchange closed. This integration is non-functional.
 
 // https://swiftex.co/api/v2/tickers.json
 

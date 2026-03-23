@@ -1,4 +1,5 @@
 <?php
+// DEPRECATED: Bit-Z (now rebranded/closed) exchange. This integration is non-functional.
 // see https://apidoc.bit-z.com/en/Demo/PHP.html
 // https://apiv2.bitz.com/Market/ticker?symbol=ltc_btc
 // https://apiv2.bitz.com/Market/tickerall

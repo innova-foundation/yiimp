@@ -1,4 +1,5 @@
 <?php
+// DEPRECATED: Txbit exchange closed 2023. This integration is non-functional.
 
 function txbit_api_query($method, $params='')
 {

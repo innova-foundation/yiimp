@@ -1,4 +1,6 @@
 <?php
+// DEPRECATED: Livecoin closed 2021. This integration is non-functional.
+
 class LiveCoinApi
 {
 	protected $api_url = 'https://api.livecoin.net/';

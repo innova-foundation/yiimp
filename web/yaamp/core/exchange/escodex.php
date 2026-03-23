@@ -1,4 +1,5 @@
 <?php
+// DEPRECATED: Escodex exchange closed. This integration is non-functional.
 // http://labs.escodex.com/api/ticker
 function escodex_api_query($method, $params='')
 {

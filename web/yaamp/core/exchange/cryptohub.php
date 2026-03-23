@@ -1,4 +1,5 @@
 <?php
+// DEPRECATED: CryptoHub exchange closed. This integration is non-functional.
 
 // https://cryptohub.online/api/market/ticker/
 

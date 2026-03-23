@@ -1,4 +1,5 @@
 <?php
+// DEPRECATED: Jubi exchange closed. This integration is non-functional.
 
 function jubi_api_query($method, $params)
 {

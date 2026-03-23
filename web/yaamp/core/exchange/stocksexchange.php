@@ -1,4 +1,5 @@
 <?php
+// DEPRECATED: Stocks.Exchange closed 2019. This integration is non-functional.
 
 // markets https://stocks.exchange/api2/markets
 // prices https://stocks.exchange/api2/ticker

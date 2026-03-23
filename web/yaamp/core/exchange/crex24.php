@@ -1,4 +1,5 @@
 <?php
+// DEPRECATED: CREX24 closed 2022. This integration is non-functional.
 
 // https://docs.crex24.com/trade-api/v2/
 // https://api.crex24.com/v2/public/currencies

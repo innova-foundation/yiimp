@@ -1,4 +1,5 @@
 <?php
+// DEPRECATED: TradeSatoshi closed 2020. This integration is non-functional.
 
 // https://tradesatoshi.com/api/public/getcurrencies
 // https://tradesatoshi.com/api/public/getmarketsummaries
