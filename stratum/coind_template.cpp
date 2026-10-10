@@ -39,17 +39,53 @@ void coind_getauxblock(YAAMP_COIND *coind)
 
 YAAMP_JOB_TEMPLATE *coind_create_template_memorypool(YAAMP_COIND *coind)
 {
+	/* IBD-SEED: getmininginfo before getmemorypool early-return */
+	{
+		json_value *jmi = rpc_call(&coind->rpc, "getmininginfo", "[]");
+		if(jmi)
+		{
+			if(jmi->type != json_null)
+			{
+				json_value *jm = json_get_object(jmi, "result");
+				if(jm && jm->type != json_null)
+				{
+					coind->height = json_get_int(jm, "blocks")+1;
+					/* difficulty may be a number, a string, or an object
+					   {proof-of-work, proof-of-stake} (INN returns object). */
+					coind->difficulty = 0.0;
+					json_value *jdiff = json_get_object(jm, "difficulty");
+					if (jdiff) {
+						if (jdiff->type == json_object) {
+							double pow = json_get_double(jdiff, "proof-of-work");
+							if (pow > 0.0)
+								coind->difficulty = pow;
+						} else if (jdiff->type == json_string && jdiff->u.string.ptr) {
+							coind->difficulty = atof(jdiff->u.string.ptr);
+						} else {
+							double dn = json_get_double(jm, "difficulty");
+							if (dn > 0.0)
+								coind->difficulty = dn;
+						}
+					}
+				}
+			}
+			json_value_free(jmi);
+		}
+	}
+
 	json_value *json = rpc_call(&coind->rpc, "getmemorypool");
 	if(!json || json->type == json_null)
 	{
-		coind_error(coind, "getmemorypool");
+		debuglog("%s getmemorypool unavailable (node syncing?), non-fatal\n", coind->symbol);
+		if(!rpc_connected(&coind->rpc)) rpc_connect(&coind->rpc);
 		return NULL;
 	}
 
 	json_value *json_result = json_get_object(json, "result");
 	if(!json_result || json_result->type == json_null)
 	{
-		coind_error(coind, "getmemorypool");
+		debuglog("%s getmemorypool unavailable (node syncing?), non-fatal\n", coind->symbol);
+		if(!rpc_connected(&coind->rpc)) rpc_connect(&coind->rpc);
 		json_value_free(json);
 
 		return NULL;
@@ -71,20 +107,31 @@ YAAMP_JOB_TEMPLATE *coind_create_template_memorypool(YAAMP_COIND *coind)
 	json = rpc_call(&coind->rpc, "getmininginfo", "[]");
 	if(!json || json->type == json_null)
 	{
-		coind_error(coind, "coind getmininginfo");
+		debuglog("%s getmininginfo unavailable (node syncing?), non-fatal\n", coind->symbol);
+		if(!rpc_connected(&coind->rpc)) rpc_connect(&coind->rpc);
 		return NULL;
 	}
 
 	json_result = json_get_object(json, "result");
 	if(!json_result || json_result->type == json_null)
 	{
-		coind_error(coind, "coind getmininginfo");
+		debuglog("%s getmininginfo unavailable (node syncing?), non-fatal\n", coind->symbol);
+		if(!rpc_connected(&coind->rpc)) rpc_connect(&coind->rpc);
 		json_value_free(json);
 
 		return NULL;
 	}
 
 	templ->height = json_get_int(json_result, "blocks")+1;
+	coind->height = templ->height;
+	const char *diffstr = json_get_string(json_result, "difficulty");
+	if (diffstr && diffstr[0])
+		coind->difficulty = atof(diffstr);
+	else {
+		double d = json_get_double(json_result, "difficulty");
+		if (d > 0.0)
+			coind->difficulty = d;
+	}
 	json_value_free(json);
 
 	coind_getauxblock(coind);

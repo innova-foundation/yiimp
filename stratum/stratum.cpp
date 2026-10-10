@@ -62,7 +62,7 @@ uint64_t g_shares_counter = 0;
 uint64_t g_shares_log = 0;
 
 bool g_allow_rolltime = true;
-time_t g_last_broadcasted = 0;
+time_t g_last_broadcasted = time(NULL);
 YAAMP_DB *g_db = NULL;
 
 pthread_mutex_t g_db_mutex;

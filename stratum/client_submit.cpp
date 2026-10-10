@@ -12,8 +12,8 @@ void build_submit_values(YAAMP_JOB_VALUES *submitvalues, YAAMP_JOB_TEMPLATE *tem
 	sprintf(submitvalues->coinbase, "%s%s%s%s", templ->coinb1, nonce1, nonce2, templ->coinb2);
 	int coinbase_len = strlen(submitvalues->coinbase);
 
-	unsigned char coinbase_bin[1024];
-	memset(coinbase_bin, 0, 1024);
+	unsigned char coinbase_bin[12*1024];
+	memset(coinbase_bin, 0, sizeof(coinbase_bin));
 	binlify(coinbase_bin, submitvalues->coinbase);
 
 	char doublehash[128];
@@ -120,8 +120,8 @@ static void build_submit_values_decred(YAAMP_JOB_VALUES *submitvalues, YAAMP_JOB
 		sprintf(submitvalues->coinbase, "%s%s%s%s", templ->coinb1, nonce1, nonce2, templ->coinb2);
 		int coinbase_len = strlen(submitvalues->coinbase);
 
-		unsigned char coinbase_bin[1024];
-		memset(coinbase_bin, 0, 1024);
+		unsigned char coinbase_bin[12*1024];
+		memset(coinbase_bin, 0, sizeof(coinbase_bin));
 		binlify(coinbase_bin, submitvalues->coinbase);
 
 		YAAMP_HASH_FUNCTION merkle_hash = sha256_double_hash_hex;
@@ -256,7 +256,7 @@ static void client_do_submit(YAAMP_CLIENT *client, YAAMP_JOB *job, YAAMP_JOB_VAL
 			sprintf(block_hex+strlen(block_hex), "%s", (*i).c_str());
 
 		// POS coins need a zero byte appended to block, the daemon replaces it with the signature
-		if(coind->pos)
+		if(coind->pos || strcmp(coind->symbol, "INN") == 0 || strcmp(coind->symbol, "INNR") == 0)
 			strcat(block_hex, "00");
 
 		if(!strcmp("DCR", coind->rpcencoding)) {

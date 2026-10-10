@@ -7,7 +7,7 @@ class YAAMP_COIND_AUX;
 
 struct YAAMP_JOB_VALUES
 {
-	char coinbase[4*1024];
+	char coinbase[24*1024];
 	char merkleroot_be[1024];
 
 	char header[1024];
@@ -50,7 +50,7 @@ struct YAAMP_JOB_TEMPLATE
 	json_int_t value;
 
 	char coinb1[4*1024];
-	char coinb2[4*1024];
+	char coinb2[16*1024];
 	char coinforsubmitb1[4*1024];
 	char coinforsubmitb2[4*1024];
 	bool isbitcash;

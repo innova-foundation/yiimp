@@ -40,6 +40,30 @@ static void script_pack_tx(YAAMP_COIND *coind, char *data, json_int_t amount, co
 	strcat(data, coinb2_part);
 }
 
+static void inn_pack_varint(char *data, unsigned int n)
+{
+	if (n < 0xfd)
+		sprintf(data + strlen(data), "%02x", n);
+	else
+		sprintf(data + strlen(data), "fd%02x%02x", n & 0xff, (n >> 8) & 0xff);
+}
+
+static size_t inn_output_hexlen(const char *script)
+{
+	size_t n = strlen(script) / 2;
+	return 16 + (n < 0xfd ? 2 : 6) + strlen(script);
+}
+
+// One output: 8-byte value, varint script length, script.
+static void inn_pack_output(char *data, json_int_t value, const char *script)
+{
+	char evalue[32];
+	encode_tx_value(evalue, value);
+	strcat(data, evalue);
+	inn_pack_varint(data, (unsigned int)(strlen(script) / 2));
+	strcat(data, script);
+}
+
 static void job_pack_tx(YAAMP_COIND *coind, char *data, json_int_t amount, char *key)
 {
 	int ol = strlen(data);
@@ -141,11 +165,41 @@ void coinbase_create(YAAMP_COIND *coind, YAAMP_JOB_TEMPLATE *templ, json_value *
 	
 	char eheight[32], etime[32];
 	char entime[32] = { 0 };
+	char innotime[32] = { 0 };
 	char commitment[128] = { 0 };
 
 	ser_number(templ->height, eheight);
+	// Innova enforces BIP34 via CScript() << nHeight: OP_n for 1..16, else a length-prefixed
+	// CScriptNum (push_data) for 17 and up; rewrite the GBT ser_number marker.
+	if(strcmp(coind->symbol, "INN") == 0 || strcmp(coind->symbol, "INNR") == 0)
+	{
+		int h = templ->height;
+		if(h <= 0)
+			eheight[0] = 0;
+		else if(h <= 16)
+			sprintf(eheight, "%02x", 0x50 + h);
+		else
+		{
+			char le[32] = { 0 };
+			int nb = 0;
+			while(h > 0)
+			{
+				char tmp[4];
+				sprintf(tmp, "%02x", h & 0xff);
+				strcat(le, tmp);
+				h >>= 8;
+				nb++;
+			}
+			if(le[2*nb-2] >= '8')
+				strcat(le, "00");
+			sprintf(eheight, "%02x%s", (int)(strlen(le) / 2), le);
+		}
+	}
 	ser_number(time(NULL), etime);
 	if(coind->pos) ser_string_be(templ->ntime, entime, 1);
+	// Innova CTransaction serializes a 4-byte nTime right after nVersion.
+	if(strcmp(coind->symbol, "INN") == 0 || strcmp(coind->symbol, "INNR") == 0)
+		ser_string_be(templ->ntime, innotime, 1);
 
 	char eversion1[32] = "01000000";
 	if(coind->txmessage)
@@ -164,9 +218,9 @@ void coinbase_create(YAAMP_COIND *coind, YAAMP_JOB_TEMPLATE *templ, json_value *
 		coinbase_aux(templ, script2);
 
 	int script_len = strlen(script1)/2 + strlen(script2)/2 + 8;
-	sprintf(templ->coinb1, "%s%s01"
+	sprintf(templ->coinb1, "%s%s%s01"
 		"0000000000000000000000000000000000000000000000000000000000000000"
-		"ffffffff%02x%s", eversion1, entime, script_len, script1);
+		"ffffffff%02x%s", eversion1, innotime, entime, script_len, script1);
 
 	sprintf(templ->coinb2, "%s00000000", script2);
 
@@ -244,6 +298,82 @@ void coinbase_create(YAAMP_COIND *coind, YAAMP_JOB_TEMPLATE *templ, json_value *
 		strcat(templ->coinb2, "00000000"); // locktime
 		coind->reward = (double)available/100000000*coind->reward_mul;
 		//debuglog("%s %d dests %s\n", coind->symbol, npayees, script_dests);
+		return;
+	}
+
+	else if(strcmp(coind->symbol, "INN") == 0 || strcmp(coind->symbol, "INNR") == 0)
+	{
+		// Innova v5: outputs are [CN payee][pool payout][node-built outputs].
+		// coinbase_required_outputs (node v5.0.0.1+) lists every coinbase output
+		// but the payout and the CN payment. The IMTS and IDAG commitments and any
+		// paid output (epoch settlement) are required for validity; zero-value
+		// votes, shares and certificates are optional and added while they fit.
+		const char *payee = json_get_string(json_result, "payee");
+		json_int_t payee_amount = json_get_int(json_result, "payee_amount");
+		const char *dag = json_get_string(json_result, "coinbase_dag");
+		bool has_dag = (dag && strlen(dag) > 0);
+		char script_payee[128] = { 0 };
+		// Skip the CN payee output when the address is missing or not valid
+		// base58 (regtest reports a placeholder); enforcement is off there.
+		bool has_payee = (payee && strlen(payee) > 0
+			&& payee_amount > 0
+			&& base58_decode(payee, script_payee));
+		if (has_payee)
+			available -= payee_amount;
+
+		char extra[sizeof(templ->coinb2)] = { 0 };
+		int nextra = 0;
+		json_value *req = json_get_array(json_result, "coinbase_required_outputs");
+		if (req && req->type == json_array) {
+			const size_t limit = sizeof(templ->coinb2) - 512;
+			size_t need = 0;
+			for (int pass = 0; pass < 2; pass++) {
+				for (int k = 0; k < (int)req->u.array.length; k++) {
+					json_value *o = req->u.array.values[k];
+					const char *script = json_get_string(o, "script");
+					json_int_t value = json_get_int(o, "value");
+					if (!script) continue;
+					size_t len = inn_output_hexlen(script);
+					bool required = value > 0 || strncmp(script, "6a06494d5453", 12) == 0
+						|| (has_dag && strcmp(script, dag) == 0);
+					if (pass == 0) {
+						available -= value;
+						if (required) need += len;
+						continue;
+					}
+					if (required || need + len <= limit) {
+						if (!required) need += len;
+						inn_pack_output(extra, value, script);
+						nextra++;
+					}
+				}
+				if (pass == 0 && need > limit) {
+					stratumlog("%s height %d: required coinbase outputs need %d hex chars, over %d\n",
+						coind->symbol, templ->height, (int)need, (int)limit);
+					break;
+				}
+			}
+		} else {
+			// v5.0.0.0 node: only the IDAG commitment is exposed; write the IMTS
+			// commitment here. It is mandatory from the ms-timestamp fork (INNR
+			// regtest 9, INN mainnet 8150520) and forbidden below it.
+			if (templ->height >= (strcmp(coind->symbol, "INNR") == 0 ? 9 : 8150520)) {
+				inn_pack_output(extra, 0, "6a06494d54530000");
+				nextra++;
+			}
+			if (has_dag) {
+				inn_pack_output(extra, 0, dag);
+				nextra++;
+			}
+		}
+
+		inn_pack_varint(templ->coinb2, 1 + (has_payee ? 1 : 0) + nextra);
+		if (has_payee)
+			job_pack_tx(coind, templ->coinb2, payee_amount, script_payee);
+		job_pack_tx(coind, templ->coinb2, available, NULL); // pool payout
+		strcat(templ->coinb2, extra);
+		strcat(templ->coinb2, "00000000"); // locktime
+		coind->reward = (double)available/100000000*coind->reward_mul;
 		return;
 	}
 

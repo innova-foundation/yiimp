@@ -71,7 +71,7 @@ bool coind_can_mine(YAAMP_COIND *coind, bool isaux)
 	if(!coind->enable) return false;
 	if(!coind->auto_ready) return false;
 	if(!rpc_connected(&coind->rpc)) return false;
-	if(!coind->height) return false;
+	if(!coind->height && !coind->job) return false; /* regtest genesis: height 0 is valid once a job exists */
 	if(!coind->difficulty) return false;
 	if(coind->isaux != isaux) return false;
 //	if(isaux && !coind->aux.chainid) return false;
