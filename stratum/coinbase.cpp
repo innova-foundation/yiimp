@@ -313,11 +313,13 @@ void coinbase_create(YAAMP_COIND *coind, YAAMP_JOB_TEMPLATE *templ, json_value *
 		const char *dag = json_get_string(json_result, "coinbase_dag");
 		bool has_dag = (dag && strlen(dag) > 0);
 		char script_payee[128] = { 0 };
-		// Skip the CN payee output when the address is missing or not valid
-		// base58 (regtest reports a placeholder); enforcement is off there.
-		bool has_payee = (payee && strlen(payee) > 0
-			&& payee_amount > 0
-			&& base58_decode(payee, script_payee));
+		// payee_script (node v5.0.0.1+) is the CN payment script as the node builds
+		// it; the mainnet burn fallback is an empty script no address decodes to.
+		// Without it, skip the CN payee output when the address is missing or not
+		// valid base58 (regtest reports a placeholder; enforcement is off there).
+		const char *payee_script = json_get_string(json_result, "payee_script");
+		bool has_payee = payee_amount > 0 && (payee_script
+			|| (payee && strlen(payee) > 0 && base58_decode(payee, script_payee)));
 		if (has_payee)
 			available -= payee_amount;
 
@@ -368,7 +370,9 @@ void coinbase_create(YAAMP_COIND *coind, YAAMP_JOB_TEMPLATE *templ, json_value *
 		}
 
 		inn_pack_varint(templ->coinb2, 1 + (has_payee ? 1 : 0) + nextra);
-		if (has_payee)
+		if (has_payee && payee_script)
+			inn_pack_output(templ->coinb2, payee_amount, payee_script);
+		else if (has_payee)
 			job_pack_tx(coind, templ->coinb2, payee_amount, script_payee);
 		job_pack_tx(coind, templ->coinb2, available, NULL); // pool payout
 		strcat(templ->coinb2, extra);
