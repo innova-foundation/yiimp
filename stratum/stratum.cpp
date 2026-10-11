@@ -32,6 +32,7 @@ char g_stratum_algo[256];
 double g_stratum_difficulty;
 double g_stratum_min_diff;
 double g_stratum_max_diff;
+double g_stratum_difficulty_cap = 0;
 
 double g_stratum_nicehash_difficulty;
 double g_stratum_nicehash_min_diff;

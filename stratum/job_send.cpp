@@ -99,6 +99,10 @@ void job_send_jobid(YAAMP_CLIENT *client, int jobid)
 
 void job_broadcast(YAAMP_JOB *job)
 {
+	// INN aims for 1-second blocks: cap share difficulty at the network's.
+	if (job->coind && (!strcmp(job->coind->symbol, "INN") || !strcmp(job->coind->symbol, "INNR")))
+		g_stratum_difficulty_cap = job->coind->difficulty;
+
 	int s1 = current_timestamp_dms();
 	int count = 0;
 	struct timeval timeout;
