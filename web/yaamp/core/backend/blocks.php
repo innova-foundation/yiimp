@@ -283,7 +283,8 @@ function BackendBlocksUpdate($coinid = NULL)
 
 	$sqlFilter = $coinid ? " AND coin_id=".intval($coinid) : '';
 
-	$list = getdbolist('db_blocks', "category IN ('immature','stake','orphan') $sqlFilter ORDER BY time");
+	// Orphans only return through a reorg: recheck recent ones.
+	$list = getdbolist('db_blocks', "(category IN ('immature','stake') OR (category='orphan' AND time > UNIX_TIMESTAMP()-3600)) $sqlFilter ORDER BY time");
 	foreach($list as $block)
 	{
 		$coin = getdbo('db_coins', $block->coin_id);
