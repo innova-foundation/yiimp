@@ -185,7 +185,7 @@ class CronjobController extends CommonController
 		memcache_set($this->memcache->memcache, "cronjob_main_state_$state", 0);
 
 		memcache_set($this->memcache->memcache, "cronjob_main_time_start", time());
-		if(!YAAMP_PRODUCTION) return;
+		if(!YAAMP_PRODUCTION && !YAAMP_PAYMENTS_ENABLED) return;
 
 		///////////////////////////////////////////////////////////////////
 
@@ -198,11 +198,10 @@ class CronjobController extends CommonController
 		$mining->save();
 
 		memcache_set($this->memcache->memcache, 'apache_locked', true);
-		if(YAAMP_USE_NGINX)
-			//system("service nginx stop");
-
-		sleep(10);
-		BackendDoBackup();
+		if(YAAMP_PRODUCTION && is_readable('/etc/yiimp/keys.php')) {
+			sleep(10);
+			BackendDoBackup();
+		}
 		memcache_set($this->memcache->memcache, 'apache_locked', false);
 
 		// prevent user balances changes during payments (blocks thread)
