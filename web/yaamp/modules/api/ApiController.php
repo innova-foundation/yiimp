@@ -52,7 +52,7 @@ class ApiController extends CommonController
 			if (yaamp_pool_shared_rate($algo)) $pool_shared_hash = yaamp_pool_shared_rate($algo);
 			else $pool_shared_hash = '0';
 
-			if (yaamp_pool_solo_rate($algo)) $pool_shared_hash = yaamp_pool_solo_rate($algo);
+			if (yaamp_pool_solo_rate($algo)) $pool_solo_hash = yaamp_pool_solo_rate($algo);
 			else $pool_solo_hash = '0';
 
             $price = controller()->memcache->get_database_scalar("api_status_price-$algo", "select price from hashrate where algo=:algo order by time desc limit 1", array(
@@ -120,7 +120,7 @@ class ApiController extends CommonController
         $json = json_encode($stats);
         echo $json;
 
-        controller()->memcache->set("api_status", $json, 30, MEMCACHE_COMPRESSED);
+        controller()->memcache->set("api_status", $json, 30, defined('MEMCACHE_COMPRESSED') ? MEMCACHE_COMPRESSED : 0);
     }
 
     public function actionCurrencies()
@@ -245,7 +245,7 @@ class ApiController extends CommonController
                     $data[$symbol]['symbol'] = $coin->symbol2;
             }
             $json = json_encode($data);
-            controller()->memcache->set("api_currencies", $json, 15, MEMCACHE_COMPRESSED);
+            controller()->memcache->set("api_currencies", $json, 15, defined('MEMCACHE_COMPRESSED') ? MEMCACHE_COMPRESSED : 0);
         }
 
         echo str_replace("},", "},\n", $json);
@@ -366,7 +366,7 @@ class ApiController extends CommonController
                     $json_payouts .= "}";
                 }
                 $json_payouts .= "]";
-                controller()->memcache->set("api_payouts-" . $user->id, $json_payouts, 60, MEMCACHE_COMPRESSED);
+                controller()->memcache->set("api_payouts-" . $user->id, $json_payouts, 60, defined('MEMCACHE_COMPRESSED') ? MEMCACHE_COMPRESSED : 0);
             }
             echo str_replace("},", "},\n", $json_payouts);
         }
