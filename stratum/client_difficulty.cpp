@@ -2,6 +2,9 @@
 
 double client_normalize_difficulty(double difficulty)
 {           // https://github.com/MicroBitcoinOrg/Yiimp
+	// A share target harder than the network's makes miners drop block solutions.
+	if(g_stratum_difficulty_cap > 0 && difficulty > g_stratum_difficulty_cap)
+		difficulty = g_stratum_difficulty_cap;
 	if(difficulty < g_stratum_min_diff)
         difficulty = g_stratum_min_diff;
 	else if(difficulty < 1) 
