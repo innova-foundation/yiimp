@@ -33,7 +33,7 @@ class CommonController extends CController
 		}
 
 		$algo = user()->getState('yaamp-algo');
-		if(!$algo) user()->setState('yaamp-algo', YAAMP_DEFAULT_ALGO);
+		if(!$algo || ($algo != 'all' && !in_array($algo, yaamp_get_algos()))) user()->setState('yaamp-algo', YAAMP_DEFAULT_ALGO);
 
 		return true;
 	}

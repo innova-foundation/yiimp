@@ -6,7 +6,7 @@
 function updateRawcoins()
 {
 	debuglog(__FUNCTION__);
-	// exit();
+	if (!YAAMP_ALLOW_EXCHANGE) return;
 	exchange_set_default('alcurex', 'disabled', true);
 	exchange_set_default('altmarkets', 'disabled', true);
 	exchange_set_default('binance', 'disabled', true);

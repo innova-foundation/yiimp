@@ -67,10 +67,10 @@ request:
 result:
 <pre class="main-left-box" style='padding: 3px; font-size: .8em; background-color: var(--bg-tertiary); font-family: monospace;'>
 {
-	"x11": {
-		"name": "x11",
-		"port": 3533,
-		"coins": 10,
+	"tribus": {
+		"name": "tribus",
+		"port": 8533,
+		"coins": 1,
 		"fees": 1,
 		"hashrate": 269473938,
 		"workers": 5,
