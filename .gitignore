@@ -21,3 +21,5 @@ web/assets/
 web/yaamp/.idea/
 *.0
 .vscode/
+stratum/*.conf
+*.bak*
