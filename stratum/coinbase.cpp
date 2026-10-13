@@ -196,10 +196,10 @@ void coinbase_create(YAAMP_COIND *coind, YAAMP_JOB_TEMPLATE *templ, json_value *
 		}
 	}
 	ser_number(time(NULL), etime);
-	if(coind->pos) ser_string_be(templ->ntime, entime, 1);
-	// Innova CTransaction serializes a 4-byte nTime right after nVersion.
+	// Innova CTransaction serializes a 4-byte nTime right after nVersion, once.
 	if(strcmp(coind->symbol, "INN") == 0 || strcmp(coind->symbol, "INNR") == 0)
 		ser_string_be(templ->ntime, innotime, 1);
+	else if(coind->pos) ser_string_be(templ->ntime, entime, 1);
 
 	char eversion1[32] = "01000000";
 	if(coind->txmessage)
