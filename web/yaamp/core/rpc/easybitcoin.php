@@ -164,7 +164,7 @@ class Bitcoin {
 		$curl    = curl_init("{$this->proto}://{$this->username}:{$this->password}@{$this->host}:{$this->port}/{$this->url}");
 		$options = array(
 			CURLOPT_CONNECTTIMEOUT => 20,
-			CURLOPT_TIMEOUT        => 30,
+			CURLOPT_TIMEOUT        => in_array($method, array('sendtoaddress', 'sendmany', 'sendfrom')) ? 600 : 30,
 			CURLOPT_RETURNTRANSFER => TRUE,
 			CURLOPT_FOLLOWLOCATION => TRUE,
 			CURLOPT_MAXREDIRS      => 10,

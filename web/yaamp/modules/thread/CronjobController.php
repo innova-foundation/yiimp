@@ -205,7 +205,7 @@ class CronjobController extends CommonController
 		memcache_set($this->memcache->memcache, 'apache_locked', false);
 
 		// prevent user balances changes during payments (blocks thread)
-		memcache_set($this->memcache->memcache, 'balances_locked', true, 0, 300);
+		memcache_set($this->memcache->memcache, 'balances_locked', true, 0, 3600);
 		BackendPayments();
 		memcache_set($this->memcache->memcache, 'balances_locked', false);
 
