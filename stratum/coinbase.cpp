@@ -336,8 +336,10 @@ void coinbase_create(YAAMP_COIND *coind, YAAMP_JOB_TEMPLATE *templ, json_value *
 					json_int_t value = json_get_int(o, "value");
 					if (!script) continue;
 					size_t len = inn_output_hexlen(script);
+					// The IPAY payee commitment is what lets a merged copy of this block be paid.
 					bool required = value > 0 || strncmp(script, "6a06494d5453", 12) == 0
-						|| (has_dag && strcmp(script, dag) == 0);
+						|| (has_dag && strcmp(script, dag) == 0)
+						|| (strncmp(script, "6a", 2) == 0 && strlen(script) > 12 && strncmp(script + 4, "49504159", 8) == 0);
 					if (pass == 0) {
 						available -= value;
 						if (required) need += len;
