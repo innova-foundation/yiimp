@@ -141,6 +141,7 @@ void db_add_worker(YAAMP_DB *db, YAAMP_CLIENT *client)
 	char password[128] = { 0 };
 	char version[128] = { 0 };
 	char worker[128] = { 0 };
+	char name[53] = { 0 };
 	int now = time(NULL);
 
 	db_clear_worker(db, client);
@@ -161,10 +162,11 @@ void db_add_worker(YAAMP_DB *db, YAAMP_CLIENT *client)
 	strncpy(password, client->password, 64);
 	strncpy(version, client->version, 64);
 	strncpy(worker, client->worker, 64);
+	strncpy(name, client->username, 52); // workers.name is VARCHAR(52)
 
 	db_query(db, "INSERT INTO workers (userid, ip, name, difficulty, version, password, worker, algo, time, pid) "\
 		"VALUES (%d, '%s', '%s', %f, '%s', '%s', '%s', '%s', %d, %d)",
-		client->userid, client->sock->ip, client->username, client->difficulty_actual,
+		client->userid, client->sock->ip, name, client->difficulty_actual,
 		version, password, worker, g_stratum_algo, now, getpid());
 
 	client->workerid = (int)mysql_insert_id(&db->mysql);

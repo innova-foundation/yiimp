@@ -378,6 +378,11 @@ bool client_submit(YAAMP_CLIENT *client, json_value *json_params)
 		return false;
 	}
 
+	if(client->userid <= 0) {
+		client->submit_bad++;
+		return false;
+	}
+
 	char extranonce2[32] = { 0 };
 	char extra[160] = { 0 };
 	char nonce[80] = { 0 };

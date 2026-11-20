@@ -5,6 +5,14 @@ require_once('yaamp/defaultconfig.php');
 
 class CronjobController extends CommonController
 {
+	// The cron loops (main.sh, loop2.sh, blocks.sh) run these actions from the CLI;
+	// they move payouts and block state, so a web request must never reach them.
+	protected function beforeAction($action)
+	{
+		if (php_sapi_name() != "cli") throw new CHttpException(404, "Not found");
+		return parent::beforeAction($action);
+	}
+
 	private function monitorApache()
 	{
 		if(!YAAMP_PRODUCTION) return;

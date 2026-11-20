@@ -44,7 +44,7 @@ void db_close(YAAMP_DB *db)
 char *db_clean_string(YAAMP_DB *db, char *string)
 {
 	char *c = string;
-	size_t i, len = strlen(string) & 0x1FF;
+	size_t i, len = strlen(string);
 	for (i = 0; i < len; i++) {
 		bool isdigit = (c[i] >= '0' && c[i] <= '9');
 		bool isalpha = (c[i] >= 'a' && c[i] <= 'z') || (c[i] >= 'A' && c[i] <= 'Z');
@@ -59,7 +59,7 @@ char *db_clean_string(YAAMP_DB *db, char *string)
 static void clean_html(char* string)
 {
 	char *c = string;
-	size_t i, len = strlen(string) & 0x1FF;
+	size_t i, len = strlen(string);
 	for (i = 0; i < len; i++) {
 		if (c[i] == '<' || c[i] == '>' || c[i] == '%' || c[i] == '\\' || c[i] == '"' || c[i] == '\'') {
 			c[i] = '\0'; break;
@@ -88,7 +88,7 @@ void db_query(YAAMP_DB *db, const char *format, ...)
 
 		stratumlog("SQL ERROR: %d, %s\n", res, mysql_error(&db->mysql));
 		if(res == ER_DUP_ENTRY) break; // rarely seen on new user creation
-		if(res != CR_SERVER_GONE_ERROR && res != CR_SERVER_LOST) exit(1);
+		if(res != CR_SERVER_GONE_ERROR && res != CR_SERVER_LOST) break;
 
 		usleep(100*YAAMP_MS);
 		db_reconnect(db);

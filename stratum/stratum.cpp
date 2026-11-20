@@ -511,11 +511,7 @@ void *stratum_thread(void *p)
 			stratumlog("%s socket accept() error %d\n", g_stratum_algo, error);
 			failcount++;
 			usleep(50000);
-			if (error == 24 && failcount > 5) {
-				g_exiting = true; // happen when max open files is reached (see ulimit)
-				stratumlogdate("%s too much socket failure, exiting...\n", g_stratum_algo);
-				exit(error);
-			}
+			if (error == EMFILE || error == ENFILE) usleep(500000); // out of fds: back off, keep serving
 			continue;
 		}
 
@@ -525,9 +521,9 @@ void *stratum_thread(void *p)
 		if(res != 0)
 		{
 			int error = errno;
-			close(sock);
-			g_exiting = true;
+			close(sock); // drop this connection only
 			stratumlog("%s pthread_create error %d %d\n", g_stratum_algo, res, error);
+			continue;
 		}
 
 		pthread_detach(thread);
